@@ -103,8 +103,8 @@ jobs:
       - name: Add OS host to resolv.conf
         run: |
           sudo mv /etc/resolv.conf /etc/resolv1.conf
+          echo "nameserver ${{ secrets.DNS_IP }}" | sudo tee -a /etc/resolv.conf
           cat /etc/resolv1.conf | sudo tee -a /etc/resolv.conf
-          echo "${{ secrets.OPENSHIFT_SERVER }} ${{ secrets.DNS_IP }}" | sudo tee -a /etc/resolv.conf
 
       - name: Log in to OpenShift
         run: |
