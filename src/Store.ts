@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { list } from "./res";
 
 export interface IArticle {
-  uuid: string;
+  id: string;
   title: string;
   categories: string;
   creator: string;
@@ -11,9 +11,10 @@ export interface IArticle {
 }
 
 class Store {
-  articles: Array<IArticle> = [];
   private readonly countArticlePage: number;
-  countPage: number;
+  articles: Array<IArticle> = [];
+  countPage: number = 0;
+  delArticle?: IArticle;
 
   constructor() {
     makeAutoObservable(this);
@@ -23,8 +24,18 @@ class Store {
   }
 
   loadArticles = (page: number): void => {
+    //TODO
     this.articles = list as Array<IArticle>;
     console.debug(page);
+  };
+
+  onDelArticle = (): void => {
+    //TODO
+    console.debug(this.delArticle);
+  };
+
+  setDelDlg = (article?: IArticle) => {
+    this.delArticle = article;
   };
 }
 

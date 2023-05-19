@@ -1,6 +1,6 @@
 export const list = [
   {
-    uuid: "12345678",
+    id: "12345678",
     title: "Cтатья",
     categories: "МАИ/Факультет/Кафедра",
     creator: "Никита",
@@ -8,7 +8,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "sadfgh",
+    id: "sadfgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -16,7 +16,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "jghfds",
+    id: "jghfds",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -24,7 +24,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "12345fg678",
+    id: "12345fg678",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -32,7 +32,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "sadfdfgdfgh",
+    id: "sadfdfgdfgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -40,7 +40,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "jghsdfds",
+    id: "jghsdfds",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -48,7 +48,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "12345dfgdf678",
+    id: "12345dfgdf678",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -56,7 +56,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "sadssdfgh",
+    id: "sadssdfgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -64,7 +64,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "jghfdgfgdgs",
+    id: "jghfdgfgdgs",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -72,7 +72,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "12345ujuyhg678",
+    id: "12345ujuyhg678",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -80,7 +80,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "sadfhkhjkgh",
+    id: "sadfhkhjkgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -88,7 +88,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "jghffdfds",
+    id: "jghffdfds",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -96,7 +96,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "123456ghgfh78",
+    id: "123456ghgfh78",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -104,7 +104,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "sadfsdfsgh",
+    id: "sadfsdfsgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -112,7 +112,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "jghsdgsfds",
+    id: "jghsdgsfds",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -120,7 +120,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "123sdgd45678",
+    id: "123sdgd45678",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -128,7 +128,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "shgadfgh",
+    id: "shgadfgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -136,7 +136,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "jghuufds",
+    id: "jghuufds",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -144,7 +144,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "1234567uu8",
+    id: "1234567uu8",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -152,7 +152,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "sauufgh",
+    id: "sauufgh",
     title: "1",
     categories: "1/2",
     creator: "123",
@@ -160,7 +160,7 @@ export const list = [
     text: "qwertyhjm",
   },
   {
-    uuid: "uujghfds",
+    id: "uujghfds",
     title: "1",
     categories: "1/2",
     creator: "123",
