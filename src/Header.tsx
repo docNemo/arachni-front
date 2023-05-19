@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import store from "./Store";
 
 const Header = () => {
   return (
@@ -14,7 +15,7 @@ const Header = () => {
           TermPaper
         </Typography>
         <Box display={"flex"}>
-          <IconButton sx={{ color: "white" }}>
+          <IconButton sx={{ color: "white" }} onClick={store.setOpenAddDlg}>
             <AddIcon />
           </IconButton>
         </Box>

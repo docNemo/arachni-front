@@ -15,6 +15,7 @@ class Store {
   articles: Array<IArticle> = [];
   countPage: number = 0;
   delArticle?: IArticle;
+  isOpenAddDlg: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -36,6 +37,12 @@ class Store {
 
   setDelDlg = (article?: IArticle) => {
     this.delArticle = article;
+  };
+
+  setOpenAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
+
+  onAddArticle = (): void => {
+    //TODO
   };
 }
 
