@@ -8,7 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const Header = () => {
   return (
-    <AppBar component={'nav'}>
+    <AppBar component={"nav"} sx={{ position: "relative" }}>
       <Toolbar>
         <Typography variant={"h5"} sx={{ flexGrow: 1 }}>
           TermPaper
