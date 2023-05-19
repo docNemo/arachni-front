@@ -39,10 +39,27 @@ class Store {
     this.delArticle = article;
   };
 
-  setOpenAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
+  setOpenAddDlg = () => {
+    this.isOpenAddDlg = !this.isOpenAddDlg;
+  };
 
-  onAddArticle = (): void => {
-    //TODO
+  onAddArticle = (
+    title: string,
+    categories: string,
+    text: string,
+    creator: string
+  ): void => {
+    fetch("http://arachni-back-develop.apps.os-lab-1.neo/api/article", {
+      method: "POST",
+      body: JSON.stringify({
+        title: title,
+        categories: categories,
+        text: text,
+        creator: creator,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => console.log(res));
   };
 }
 

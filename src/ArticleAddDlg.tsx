@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -9,9 +9,35 @@ import store from "./Store";
 import TextField from "@mui/material/TextField";
 
 const ArticleAddDlg = () => {
-  const create = () => {};
-  //TODO
-  const close = () => store.setOpenAddDlg();
+  const [title, setTitle] = useState<string>("");
+  const [categories, setCategories] = useState<string>("");
+  const [text, setText] = useState<string>("");
+  const [creator, setCreator] = useState<string>("");
+  const [disableCreate, setDisableCreate] = useState<boolean>(true);
+
+  const clear = () => {
+    setTitle("");
+    setCategories("");
+    setText("");
+    setCreator("");
+  };
+
+  const create = () => {
+    store.onAddArticle(title, categories, text, creator);
+    clear();
+  };
+
+  const close = () => {
+    store.setOpenAddDlg();
+    clear();
+  };
+
+  useEffect(() => {
+    setDisableCreate(
+      !(title.trim() && categories.trim() && text.trim() && creator.trim())
+    );
+  });
+
   return (
     <Dialog open={store.isOpenAddDlg}>
       <DialogTitle>Создание новой статьи</DialogTitle>
@@ -21,12 +47,16 @@ const ArticleAddDlg = () => {
           variant="standard"
           size="small"
           label={"Название"}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <TextField
           fullWidth
           variant="standard"
           size="small"
           label={"Категория"}
+          value={categories}
+          onChange={(e) => setCategories(e.target.value)}
         />
         <TextField
           fullWidth
@@ -35,11 +65,22 @@ const ArticleAddDlg = () => {
           size="small"
           maxRows={10}
           label={"Текст статьи"}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
-        <TextField fullWidth variant="standard" size="small" label={"Автор"} />
+        <TextField
+          fullWidth
+          variant="standard"
+          size="small"
+          label={"Автор"}
+          value={creator}
+          onChange={(e) => setCreator(e.target.value)}
+        />
       </DialogContent>
       <DialogActions>
-        <Button onClick={create}>Создать</Button>
+        <Button onClick={create} disabled={disableCreate}>
+          Создать
+        </Button>
         <Button onClick={close}>Закрыть</Button>
       </DialogActions>
     </Dialog>
