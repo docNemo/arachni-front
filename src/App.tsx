@@ -7,6 +7,7 @@ import Stack from "@mui/material/Stack";
 import Header from "./Header";
 import ListPaper from "./ListPaper";
 import ArticleDelDlg from "./ArticleDelDlg";
+import ArticleAddDlg from "./ArticleAddDlg";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <ListPaper />
       </Stack>
       <ArticleDelDlg />
+      <ArticleAddDlg />
     </>
   );
 };

@@ -12,30 +12,92 @@ export interface IArticle {
 
 class Store {
   private readonly countArticlePage: number;
+  private readonly url: string;
   articles: Array<IArticle> = [];
   countPage: number = 0;
-  delArticle?: IArticle;
+  selectArticle?: IArticle;
+  isOpenAddDlg: boolean = false;
+  isOpenDelDlg: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
     this.countArticlePage = 10;
-    this.countPage = 15;
+    this.url = "/api/article";
     this.loadArticles(1);
   }
 
   loadArticles = (page: number): void => {
-    //TODO
+    // const url = new URL(`${this.url}/list`, window.location.origin);
+    // url.searchParams.append(
+    //   "skip",
+    //   (page - 1 * this.countArticlePage).toString()
+    // );
+    // url.searchParams.append("limit", this.countArticlePage.toString());
+    // fetch(url, { method: "GET" })
+    //   .then((res) => res.json())
+    //   .then((res) => console.debug(res));
     this.articles = list as Array<IArticle>;
+    this.countPage = 15; // Math.ceil(list.length / this.countArticlePage);
     console.debug(page);
   };
 
-  onDelArticle = (): void => {
-    //TODO
-    console.debug(this.delArticle);
-  };
+  setAddDlg = () => (this.isOpenAddDlg = !this.isOpenAddDlg);
 
   setDelDlg = (article?: IArticle) => {
-    this.delArticle = article;
+    this.selectArticle = article;
+    this.isOpenDelDlg = !this.isOpenDelDlg;
+  };
+
+  setOpenArticle = (article: IArticle) => {
+    fetch(`${window.location.origin}${this.url}/${article.id}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => console.debug(res));
+    this.selectArticle = article;
+  };
+
+  onAddArticle = (
+    title: string,
+    categories: string,
+    text: string,
+    creator: string
+  ): void => {
+    // fetch(`${window.location.origin}${this.url}`, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     title: title,
+    //     categories: categories,
+    //     text: text,
+    //     creator: creator,
+    //   }),
+    // })
+    //   .then((res) => res.json())
+    //   .then((res) => console.debug(res));
+  };
+
+  onDelArticle = (): void => {
+    if (!this.selectArticle) {
+      return;
+    }
+    fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((res) => console.debug(res));
+  };
+
+  onUpdArticle = (title: string, categories: string, text: string): void => {
+    // fetch(`${window.location.origin}${this.url}`, {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     title: title,
+    //     categories: categories,
+    //     text: text,
+    //   }),
+    // })
+    //   .then((res) => res.json())
+    //   .then((res) => console.debug(res));
   };
 }
 

@@ -9,14 +9,14 @@ import Button from "@mui/material/Button";
 import store from "./Store";
 
 const ArticleDelDlg = () => {
-  //TODO
   const close = () => store.setDelDlg();
   return (
-    <Dialog open={!!store.delArticle}>
+    <Dialog open={store.isOpenDelDlg}>
       <DialogTitle>Удалить</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Вы точно хотите безвозратно удалить статью "{store.delArticle?.title}"
+          Вы точно хотите безвозратно удалить статью "
+          {store.selectArticle?.title}"
         </DialogContentText>
       </DialogContent>
       <DialogActions>
