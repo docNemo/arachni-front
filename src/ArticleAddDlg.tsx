@@ -28,7 +28,7 @@ const ArticleAddDlg = () => {
   };
 
   const close = () => {
-    store.setOpenAddDlg();
+    store.setAddDlg();
     clear();
   };
 

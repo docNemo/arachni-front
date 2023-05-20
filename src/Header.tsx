@@ -16,7 +16,7 @@ const Header = () => {
           TermPaper
         </Typography>
         <Box display={"flex"}>
-          <IconButton sx={{ color: "white" }} onClick={store.setOpenAddDlg}>
+          <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
             <AddIcon />
           </IconButton>
         </Box>
