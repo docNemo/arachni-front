@@ -113,7 +113,19 @@ jobs:
 
       - name: Log in to OpenShift
         run: |
-          oc login -u ${{ secrets.LOGIN_OS }} -p ${{ secrets.PASSWORD_OS }} --server=https://${{ secrets.OPENSHIFT_SERVER }}:6443 --insecure-skip-tls-verify
+          max_iteration=3
+          iteration=1
+          until oc login -u ${{ secrets.LOGIN_OS }} -p ${{ secrets.PASSWORD_OS }} --server=https://${{ secrets.OPENSHIFT_SERVER }}:6443 --insecure-skip-tls-verify
+          do
+              echo "Unsuccessful login to OS $iteration"
+              if [[ $iteration -eq $max_iteration ]]
+              then
+                break
+              fi
+          
+              sleep 15
+              ((iteration++)) 
+          done          
           oc project ${{ env.OS_PROJECT }}
 
       - run: oc whoami
