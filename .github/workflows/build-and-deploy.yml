@@ -139,10 +139,6 @@ jobs:
           -p IMAGE_SHA=${{ steps.build-and-push.outputs.sha }} \
           -p OS_ROUTE=${{ env.OS_ROUTE }} | oc apply -f -
 
-      - name: Delete deploy pod
-        run: |
-          oc get pods | grep -o "${{ env.APPLICATION_NAME }}-${{ steps.meta.outputs.version }}.*deploy"
-
       - name: Logout from OpenShift
         run: oc logout
 
