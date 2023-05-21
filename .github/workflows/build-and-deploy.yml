@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   pull_request:
     branches: [ "master", "develop", "release/**", "feature/**" ]
-    types: [opened, reopened, synchronize, closed]
+    types: [ opened, reopened, synchronize, closed ]
 
 env:
   REGISTRY: ghcr.io
@@ -34,7 +34,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-#       BUILD STATIC
+      #       BUILD STATIC
       - name: Setup Node.js 18
         uses: actions/setup-node@v3
         with:
@@ -45,7 +45,7 @@ jobs:
       - run: npm run build
       - run: ls -a dist/
 
-#       BUILD DOCKER CONTAINER
+      #       BUILD DOCKER CONTAINER
       - name: Choose source branch
         if: github.event.pull_request.state == 'open'
         run: echo "BRANCH=${{ github.head_ref }}" >> $GITHUB_ENV
@@ -56,7 +56,7 @@ jobs:
 
       - name: Prepare branch name if open PR
         uses: jungwinter/split@master
-#        if: github.event.pull_request.closed == false
+        #        if: github.event.pull_request.closed == false
         id: branch
         with:
           msg: ${{ env.BRANCH }}
@@ -89,7 +89,7 @@ jobs:
           clear_sha=$(docker images --digests | grep ${{ steps.meta.outputs.version }} | awk '{print $3}')
           echo "::set-output name=sha::$clear_sha"
 
-#       DEPLOY
+      #       DEPLOY
       - name: ZeroTier
         uses: zerotier/github-action@v1.0.1
         with:
@@ -138,6 +138,10 @@ jobs:
           -p IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
           -p IMAGE_SHA=${{ steps.build-and-push.outputs.sha }} \
           -p OS_ROUTE=${{ env.OS_ROUTE }} | oc apply -f -
+
+      - name: Delete deploy pod
+        run: |
+          oc get pods | grep -o "${{ env.APPLICATION_NAME }}-${{ steps.meta.outputs.version }}.*deploy" | xargs oc delete pod
 
       - name: Logout from OpenShift
         run: oc logout
