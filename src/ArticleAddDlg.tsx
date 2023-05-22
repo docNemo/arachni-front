@@ -63,7 +63,7 @@ const ArticleAddDlg = () => {
           multiline
           variant="standard"
           size="small"
-          maxRows={10}
+          rows={10}
           label={"Текст статьи"}
           value={text}
           onChange={(e) => setText(e.target.value)}

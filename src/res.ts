@@ -5,7 +5,7 @@ export const list = [
     categories: "МАИ/Факультет/Кафедра",
     creator: "Никита",
     creation_date: "21.09.2020",
-    text: "qwertyhjm",
+    text: "qwertyhjm\ndsdfdf\nddsfdsf\ndf\n",
   },
   {
     id: "sadfgh",
