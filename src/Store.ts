@@ -6,6 +6,7 @@ export interface IArticle {
   categories: Array<string>;
   creator: string;
   creationDate: string;
+  text?: string;
 }
 
 interface IArticleListResponse {
@@ -26,12 +27,12 @@ class Store {
   constructor() {
     makeAutoObservable(this);
     this.countArticlePage = 25;
-    this.url = "http://arachni-back-develop.apps.os-lab-1.neo/api/article";
+    this.url = "/api/article";
     this.loadArticles(1);
   }
 
   loadArticles = (page: number): void => {
-    const url: URL = new URL(`${window.location.origin}/api/article/list`, window.location.origin);
+    const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
       ((page - 1) * this.countArticlePage).toString()
@@ -53,12 +54,12 @@ class Store {
   };
 
   setEditor = (article?: IArticle): void => {
-    // fetch(`${window.location.origin}${this.url}/${article.id}`, {
-    //   method: "GET",
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
-    this.selectArticle = article && { ...article };
+    article &&
+      fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((res) => (this.selectArticle = res));
     this.isOpenEditor = !this.isOpenEditor;
   };
 
@@ -68,7 +69,7 @@ class Store {
     text: string,
     creator: string
   ): void => {
-    fetch(this.url, {
+    fetch(`${window.location.origin}${this.url}`, {
       method: "POST",
       body: JSON.stringify({
         title: title,
