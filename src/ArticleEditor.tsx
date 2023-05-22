@@ -25,9 +25,7 @@ const ArticleEditor = () => {
   const [change, setChange] = useState<boolean>(false);
   const [errCategories, setErrCategories] = useState<boolean>(false);
 
-  const update = () => {
-    store.onUpdArticle(title, categories, text);
-  };
+  const update = () => store.onUpdArticle(title, categories, text);
   const close = () => store.setEditor();
 
   const readOnly = {
@@ -52,10 +50,17 @@ const ArticleEditor = () => {
     <Dialog open={store.isOpenEditor}>
       <DialogTitle sx={{ display: "flex", backgroundColor: "#0288d1" }}>
         <Box flexGrow={1}>
-          <IconButton sx={{ color: "white" }} onClick={() => setEdit(!edit)}>
+          <IconButton
+            sx={{ color: "white", opacity: edit ? 1 : 0.5 }}
+            onClick={() => setEdit(!edit)}
+          >
             <EditIcon />
           </IconButton>
-          <Button onClick={update} disabled={edit && change}>
+          <Button
+            onClick={update}
+            disabled={!(edit && change)}
+            sx={{ color: "white" }}
+          >
             Обновить
           </Button>
         </Box>
@@ -71,7 +76,7 @@ const ArticleEditor = () => {
           label={"Название"}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          InputProps={edit ? readOnly : {}}
+          InputProps={edit ? {} : readOnly}
         />
         <TextField
           fullWidth
@@ -84,7 +89,7 @@ const ArticleEditor = () => {
           }
           value={categories}
           onChange={(e) => setCategories(e.target.value)}
-          InputProps={edit ? readOnly : {}}
+          InputProps={edit ? {} : readOnly}
         />
         <TextField
           fullWidth
@@ -95,7 +100,7 @@ const ArticleEditor = () => {
           label={"Текст статьи"}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          InputProps={edit ? readOnly : {}}
+          InputProps={edit ? {} : readOnly}
         />
         <TextField
           fullWidth

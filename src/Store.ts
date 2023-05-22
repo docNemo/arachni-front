@@ -116,7 +116,7 @@ class Store {
 
   onUpdArticle = (title: string, categories: string, text: string): void => {
     fetch(`${window.location.origin}${this.url}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
