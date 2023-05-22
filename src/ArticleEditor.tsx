@@ -23,6 +23,7 @@ const ArticleEditor = () => {
   );
   const [edit, setEdit] = useState<boolean>(false);
   const [change, setChange] = useState<boolean>(false);
+  const [errCategories, setErrCategories] = useState<boolean>(false);
 
   const update = () => {
     store.onUpdArticle(title, categories, text);
@@ -38,6 +39,12 @@ const ArticleEditor = () => {
       title.trim() !== store.selectArticle?.title.trim() ||
         categories.trim() !== store.selectArticle?.categories.trim() ||
         text.trim() !== store.selectArticle?.text.trim()
+    );
+    setErrCategories(
+      categories
+        .split("/")
+        .map((str) => str.trim())
+        .some((str) => (str === ""))
     );
   });
 
@@ -71,6 +78,8 @@ const ArticleEditor = () => {
           variant="standard"
           size="small"
           label={"Категория"}
+          error={errCategories}
+          helperText={errCategories ? "Категория должна быть в формате: кат1/кат2..." : ""}
           value={categories}
           onChange={(e) => setCategories(e.target.value)}
           InputProps={edit ? readOnly : {}}

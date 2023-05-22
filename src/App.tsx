@@ -9,12 +9,10 @@ import ListPaper from "./ListPaper";
 
 const App = () => {
   return (
-    <>
-      <Stack sx={{ height: "100vh" }}>
-        <Header />
-        <ListPaper />
-      </Stack>
-    </>
+    <Stack sx={{ height: "100vh" }}>
+      <Header />
+      <ListPaper />
+    </Stack>
   );
 };
 

@@ -18,7 +18,7 @@ class Store {
   private readonly url: string;
   articles: Array<IArticle> = [];
   countPage: number = 0;
-  selectArticle?: IArticle;
+  selectArticle?: any;
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;

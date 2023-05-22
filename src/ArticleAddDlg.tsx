@@ -14,6 +14,7 @@ const ArticleAddDlg = () => {
   const [text, setText] = useState<string>("");
   const [creator, setCreator] = useState<string>("");
   const [disableCreate, setDisableCreate] = useState<boolean>(true);
+  const [errCategories, setErrCategories] = useState<boolean>(false);
 
   const clear = () => {
     setTitle("");
@@ -36,6 +37,12 @@ const ArticleAddDlg = () => {
     setDisableCreate(
       !(title.trim() && categories.trim() && text.trim() && creator.trim())
     );
+    setErrCategories(
+      categories
+        .split("/")
+        .map((str) => str.trim())
+        .some((str) => (str === ""))
+    );
   });
 
   return (
@@ -55,6 +62,8 @@ const ArticleAddDlg = () => {
           variant="standard"
           size="small"
           label={"Категория"}
+          error={errCategories}
+          helperText={errCategories ? "Категория должна быть в формате: кат1/кат2..." : ""}
           value={categories}
           onChange={(e) => setCategories(e.target.value)}
         />
