@@ -27,9 +27,27 @@ const ArticleEditor = () => {
   const [change, setChange] = useState<boolean>(false);
   const [errCategories, setErrCategories] = useState<boolean>(false);
   const [updDlg, setUpdDlg] = useState<boolean>(false);
+  const [resetDlg, setResetDlg] = useState<boolean>(false);
 
   const update = () => store.onUpdArticle(title, categories, text);
   const close = () => store.setEditor();
+  const onEditMod = () => {
+    if (!edit) {
+      setEdit(true);
+    } else if (!change) {
+      setEdit(false);
+    } else {
+      setResetDlg(true);
+    }
+  };
+  const reset = () => {
+    setChange(false);
+    setEdit(false);
+    setResetDlg(false);
+    setTitle(store.selectArticle?.title.trim() ?? "");
+    setCategories(store.selectArticle?.categories.join("/") ?? "");
+    setText(store.selectArticle?.text?.trim() ?? "");
+  };
 
   const readOnly = {
     readOnly: true,
@@ -56,13 +74,13 @@ const ArticleEditor = () => {
           <Box flexGrow={1}>
             <IconButton
               sx={{ color: "white", opacity: edit ? 1 : 0.5 }}
-              onClick={() => setEdit(!edit)}
+              onClick={onEditMod}
             >
               <EditIcon />
             </IconButton>
             <Button
               onClick={() => setUpdDlg(!updDlg)}
-              disabled={!(edit && change)}
+              disabled={!(edit && change && !errCategories)}
               sx={{ color: "white" }}
             >
               Обновить
@@ -120,7 +138,7 @@ const ArticleEditor = () => {
           />
         </DialogContent>
       </Dialog>
-      <Dialog open={store.isOpenDelDlg}>
+      <Dialog open={updDlg}>
         <DialogTitle>Обновление</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -130,6 +148,18 @@ const ArticleEditor = () => {
         <DialogActions>
           <Button onClick={update}>Обновить</Button>
           <Button onClick={() => setUpdDlg(!updDlg)}>Закрыть</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={resetDlg}>
+        <DialogTitle>Сброс изменений</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Cбросить несохраненные изменения?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={reset}>Сбросить</Button>
+          <Button onClick={() => setResetDlg(false)}>Закрыть</Button>
         </DialogActions>
       </Dialog>
     </>
