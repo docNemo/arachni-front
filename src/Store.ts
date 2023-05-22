@@ -31,7 +31,7 @@ class Store {
   }
 
   loadArticles = (page: number): void => {
-    const url: URL = new URL(`${this.url}/list`, window.location.origin);
+    const url: URL = new URL(`${window.location.origin}/api/article/list`, window.location.origin);
     url.searchParams.append(
       "skip",
       ((page - 1) * this.countArticlePage).toString()
