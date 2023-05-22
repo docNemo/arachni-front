@@ -18,6 +18,7 @@ class Store {
   private readonly countArticlePage: number;
   private readonly url: string;
   articles: Array<IArticle> = [];
+  countArticles: number = 0;
   countPage: number = 0;
   page: number = 0;
   selectArticle?: IArticle;
@@ -96,6 +97,8 @@ class Store {
         delete res.text;
         this.articles.unshift(res);
         this.setAddDlg();
+        this.countArticles = this.countArticles + 1;
+        this.countPage = Math.ceil(this.countArticles / this.countArticlePage);
       });
   };
 
