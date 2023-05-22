@@ -13,11 +13,13 @@ interface IArticleProps {
 }
 
 const Article = ({ article }: IArticleProps) => {
+  const open = () => store.setEditor(article);
   const delArticle = () => store.setDelDlg(article);
   return (
     <Paper
       key={article.id}
       elevation={8}
+      onDoubleClick={open}
       sx={{
         padding: "4px",
         marginBottom: "8px",
