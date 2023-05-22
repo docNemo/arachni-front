@@ -56,13 +56,18 @@ class Store {
   };
 
   setEditor = (article?: IArticle): void => {
-    article &&
-      fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
-        method: "GET",
-      })
-        .then((res) => res.json())
-        .then((res) => (this.selectArticle = res));
-    this.isOpenEditor = !this.isOpenEditor;
+    if (!article) {
+      this.isOpenEditor = !this.isOpenEditor;
+      return;
+    }
+    fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.selectArticle = res;
+        this.isOpenEditor = !this.isOpenEditor;
+      });
   };
 
   onAddArticle = (
