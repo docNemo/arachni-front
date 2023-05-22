@@ -6,17 +6,13 @@ import "@fontsource/roboto/700.css";
 import Stack from "@mui/material/Stack";
 import Header from "./Header";
 import ListPaper from "./ListPaper";
-import ArticleDelDlg from "./ArticleDelDlg";
 
 const App = () => {
   return (
-    <>
-      <Stack sx={{ height: "100vh" }}>
-        <Header />
-        <ListPaper />
-      </Stack>
-      <ArticleDelDlg />
-    </>
+    <Stack sx={{ height: "100vh" }}>
+      <Header />
+      <ListPaper />
+    </Stack>
   );
 };
 

@@ -1,10 +1,12 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import store from "./Store";
 
 const Header = () => {
   return (
@@ -14,7 +16,7 @@ const Header = () => {
           TermPaper
         </Typography>
         <Box display={"flex"}>
-          <IconButton sx={{ color: "white" }}>
+          <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
             <AddIcon />
           </IconButton>
         </Box>
@@ -23,4 +25,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default observer(Header);

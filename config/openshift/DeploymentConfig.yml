@@ -1,0 +1,299 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${APPLICATION_NAME}-template
+  app: ${APPLICATION_NAME}
+labels:
+  template: ${APPLICATION_NAME}-template
+  app: ${APPLICATION_NAME}
+objects:
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: ${APPLICATION_NAME}
+      generation: 1
+      labels:
+        name: ${APPLICATION_NAME}
+        app: ${APPLICATION_NAME}
+    spec:
+      replicas: 1
+      strategy:
+        type: Rolling
+        rollingUpdate:
+          maxUnavailable: 25%
+          maxSurge: 25%
+      triggers:
+        - type: ConfigChange
+      revisionHistoryLimit: 10
+      progressDeadlineSeconds: 600
+      selector:
+        app: ${APPLICATION_NAME}
+        deploymentConfig: ${APPLICATION_NAME}
+      template:
+        metadata:
+          labels:
+            app: ${APPLICATION_NAME}
+            deploymentConfig: ${APPLICATION_NAME}
+        spec:
+          restartPolicy: Always
+          serviceAccountName: builder
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 60
+          securityContext: {}
+          dnsPolicy: ClusterFirst
+          containers:
+            - name: ${APPLICATION_NAME}
+              image: ${IMAGE}@${IMAGE_SHA}
+              imagePullPolicy: Always
+              ports:
+                - containerPort: ${{HOST_PORT}}
+                  name: http
+                  protocol: TCP
+              resources:
+                limits:
+                  cpu: ${{LIMITS_CPU}}
+                  memory: ${LIMITS_MEMORY}
+                requests:
+                  cpu: ${{REQUESTS_CPU}}
+                  memory: ${REQUESTS_MEMORY}
+              volumeMounts:
+                - name: nginx-conf
+                  mountPath: /etc/nginx/
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              env:
+                - name: APPLICATION_NAME
+                  value: ${APPLICATION_NAME}
+          volumes:
+            - name: nginx-conf
+              configMap:
+                name: ${APPLICATION_NAME}-nginx-conf
+                defaultMode: 420
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${APPLICATION_NAME}
+      labels:
+        app: ${APPLICATION_NAME}
+    spec:
+      ports:
+        - name: http-${HOST_PORT}
+          port: ${{HOST_PORT}}
+      selector:
+        app: ${APPLICATION_NAME}
+        deploymentConfig: ${APPLICATION_NAME}
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+
+  - kind: Route
+    apiVersion: route.openshift.io/v1
+    metadata:
+      name: ${APPLICATION_NAME}
+      labels:
+        app: ${APPLICATION_NAME}
+    spec:
+      host: ${APPLICATION_NAME}.${OS_ROUTE}
+      to:
+        kind: Service
+        name: ${APPLICATION_NAME}
+        weight: 100
+      port:
+        targetPort: ${{HOST_PORT}}
+    
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${APPLICATION_NAME}-nginx-conf
+    data:
+      nginx.conf: |-
+        worker_processes auto;
+        error_log /var/log/nginx/error.log;
+        pid /tmp/nginx.pid;
+
+        # include /etc/nginx/modules/*.so;
+
+        events {
+            worker_connections  1024;
+        }
+        
+        http {
+            log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                              '$status $body_bytes_sent "$http_referer" '
+                              '"$http_user_agent" "$http_x_forwarded_for"';
+
+            access_log  /var/log/nginx/access.log  main;
+
+            sendfile        on;
+            tcp_nopush      on;
+            tcp_nodelay     on;
+            keepalive_timeout  65;
+            types_hash_max_size 2048;
+
+            client_body_temp_path /tmp/client_temp;
+            proxy_temp_path       /tmp/proxy_temp_path;
+            fastcgi_temp_path     /tmp/fastcgi_temp;
+            uwsgi_temp_path       /tmp/uwsgi_temp;
+            scgi_temp_path        /tmp/scgi_temp;
+
+            include /etc/nginx/mime.types;
+        
+            include /etc/nginx.d/*.conf;
+
+            server {
+                gzip on;
+                gzip_types   text/plain application/xml application/x-javascript text/css;
+                listen       8080 default_server;
+                listen       [::]:8080 default_server;
+                server_name  _;
+                root         /app;
+
+                # Load configuration files for the default server block.
+                include      /etc/nginx.default.d/*.conf;
+
+                index index.html index.htm;
+
+                location /api {
+                    proxy_pass              http://arachni-back-develop.apps.os-lab-1.neo/api;
+                    proxy_redirect          off;
+                }
+
+                location / {
+                    try_files $uri $uri/ /index.html;
+                }
+
+                # Mediz images, icons, video, adio, HTC
+                location ~* \*(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc|otf)$ {
+                    expires 1y;
+                    access_log off;
+                    add_header Cache-Control "public";
+                }
+
+                # Javascript and CSS files
+                location ~* \*(?:css|js)$ {
+                    try_files $uri =404;
+                    expires 1y;
+                    access_log off;
+                    add_header Cache-Control "public";
+                }
+
+                location ~^.+\//+$ {
+                    try_files $uri =404;
+                }
+            }
+        }
+      mime.types: |-
+        types {
+            text/html                             html htm shtml;
+            text/css                              css;
+            text/xml                              xml;
+            image/gif                             gif;
+            image/jpeg                            jpeg jpg;
+            application/javascript                js;
+            application/atom+xml                  atom;
+            application/rss+xml                   rss;
+
+            text/mathml                           mml;
+            text/plain                            txt;
+            text/vnd.sun.j2me.app-descriptor      jad;
+            text/vnd.wap.wml                      wml;
+            text/x-component                      htc;
+
+            image/png                             png;
+            image/tiff                            tif tiff;
+            image/vnd.wap.wbmp                    wbmp;
+            image/x-icon                          ico;
+            image/x-jng                           jng;
+            image/x-ms-bmp                        bmp;
+            image/svg+xml                         svg svgz;
+            image/webp                            webp;
+
+            application/font-woff                 woff;
+            application/java-archive              jar war ear;
+            application/json                      json;
+            application/mac-binhex40              hqx;
+            application/msword                    doc;
+            application/pdf                       pdf;
+            application/postscript                ps eps ai;
+            application/rtf                       rtf;
+            application/vnd.apple.mpegurl         m3u8;
+            application/vnd.ms-excel              xls;
+            application/vnd.ms-fontobject         eot;
+            application/vnd.ms-powerpoint         ppt;
+            application/vnd.wap.wmlc              wmlc;
+            application/vnd.google-earth.kml+xml  kml;
+            application/vnd.google-earth.kmz      kmz;
+            application/x-7z-compressed           7z;
+            application/x-cocoa                   cco;
+            application/x-java-archive-diff       jardiff;
+            application/x-java-jnlp-file          jnlp;
+            application/x-makeself                run;
+            application/x-perl                    pl pm;
+            application/x-pilot                   prc pdb;
+            application/x-rar-compressed          rar;
+            application/x-redhat-package-manager  rpm;
+            application/x-sea                     sea;
+            application/x-shockwave-flash         swf;
+            application/x-stuffit                 sit;
+            application/x-tcl                     tcl tk;
+            application/x-x509-ca-cert            der pem crt;
+            application/x-xpinstall               xpi;
+            application/xhtml+xml                 xhtml;
+            application/xspf+xml                  xspf;
+            application/zip                       zip;
+
+            application/octet-stream              bin exe dll;
+            application/octet-stream              deb;
+            application/octet-stream              dmg;
+            application/octet-stream              iso img;
+            application/octet-stream              msi msp msm;
+
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document    docx;
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet          xlsx;
+            application/vnd.openxmlformats-officedocument.presentationml.presentation  pptx;
+
+            audio/midi                            mid midi kar;
+            audio/mpeg                            mp3;
+            audio/ogg                             ogg;
+            audio/x-m4a                           m4a;
+            audio/x-realaudio                     ra;
+
+            video/3gpp                            3gpp 3gp;
+            video/mp2t                            ts;
+            video/mp4                             mp4;
+            video/mpeg                            mpeg mpg;
+            video/quicktime                       mov;
+            video/webm                            webm;
+            video/x-flv                           flv;
+            video/x-m4v                           m4v;
+            video/x-mng                           mng;
+            video/x-ms-asf                        asx asf;
+            video/x-ms-wmv                        wmv;
+            video/x-msvideo                       avi;
+        }
+
+parameters:
+  - name: APPLICATION_NAME
+    required: true
+  - name:   IMAGE
+    required: true
+  - name:   IMAGE_SHA
+    required: true
+  - name:   HOST_PORT
+    required: true
+  - name:   OS_ROUTE
+    required: true
+  - name:   LIMITS_CPU
+    required: true
+    value: '1'
+  - name:   LIMITS_MEMORY
+    required: true
+    value: '500Mi'
+  - name:   REQUESTS_CPU
+    required: true
+    value: '1'
+  - name:   REQUESTS_MEMORY
+    required: true
+    value: '500Mi'
