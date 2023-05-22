@@ -36,7 +36,7 @@ const ArticleAddDlg = () => {
     setDisableCreate(
       !(
         title.trim() &&
-        categories
+        !categories
           .split("/")
           .map((str) => str.trim())
           .some((str) => str === "") &&
