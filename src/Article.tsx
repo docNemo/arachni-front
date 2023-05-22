@@ -16,7 +16,7 @@ const Article = ({ article }: IArticleProps) => {
   const delArticle = () => store.setDelDlg(article);
   return (
     <Paper
-      key={article.id}
+      key={article.idArticle}
       elevation={8}
       sx={{
         padding: "4px",
@@ -29,9 +29,11 @@ const Article = ({ article }: IArticleProps) => {
           <Typography variant="h6" fontWeight={"bold"}>
             {article.title}
           </Typography>
-          <Typography variant="body1">{article.categories}</Typography>
+          <Typography variant="body1">
+            {article.categories.join("/")}
+          </Typography>
           <Typography align="right" variant="body2" color={"#666666"}>
-            {article.creator} ({article.creation_date})
+            {article.creator} ({article.creationDate})
           </Typography>
         </Stack>
         <IconButton onClick={delArticle}>

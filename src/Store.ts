@@ -1,13 +1,16 @@
 import { makeAutoObservable } from "mobx";
-import { list } from "./res";
 
 export interface IArticle {
-  id: string;
+  idArticle: string;
   title: string;
-  categories: string;
+  categories: Array<string>;
   creator: string;
-  creation_date: string;
-  text: string;
+  creationDate: string;
+}
+
+interface IArticleListResponse {
+  articles: Array<IArticle>;
+  count: number;
 }
 
 class Store {
@@ -21,24 +24,24 @@ class Store {
 
   constructor() {
     makeAutoObservable(this);
-    this.countArticlePage = 10;
+    this.countArticlePage = 25;
     this.url = "/api/article";
     this.loadArticles(1);
   }
 
   loadArticles = (page: number): void => {
-    // const url = new URL(`${this.url}/list`, window.location.origin);
-    // url.searchParams.append(
-    //   "skip",
-    //   (page - 1 * this.countArticlePage).toString()
-    // );
-    // url.searchParams.append("limit", this.countArticlePage.toString());
-    // fetch(url, { method: "GET" })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
-    this.articles = list as Array<IArticle>;
-    this.countPage = 15; // Math.ceil(list.length / this.countArticlePage);
-    console.debug(page);
+    const url: URL = new URL(`${this.url}/list`, window.location.origin);
+    url.searchParams.append(
+      "skip",
+      (page - 1 * this.countArticlePage).toString()
+    );
+    url.searchParams.append("limit", this.countArticlePage.toString());
+    fetch(url, { method: "GET" })
+      .then((res: Response) => res.json())
+      .then((res: IArticleListResponse) => {
+        this.articles = res.articles;
+        this.countPage = Math.ceil(res.count / this.countArticlePage);
+      });
   };
 
   setAddDlg = () => (this.isOpenAddDlg = !this.isOpenAddDlg);
@@ -49,12 +52,12 @@ class Store {
   };
 
   setOpenArticle = (article: IArticle) => {
-    fetch(`${window.location.origin}${this.url}/${article.id}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((res) => console.debug(res));
-    this.selectArticle = article;
+    // fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
+    //   method: "GET",
+    // })
+    //   .then((res) => res.json())
+    //   .then((res) => console.debug(res));
+    // this.selectArticle = article;
   };
 
   onAddArticle = (
@@ -80,11 +83,11 @@ class Store {
     if (!this.selectArticle) {
       return;
     }
-    fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((res) => console.debug(res));
+    // fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
+    //   method: "DELETE",
+    // })
+    //   .then((res) => res.json())
+    //   .then((res) => console.debug(res));
   };
 
   onUpdArticle = (title: string, categories: string, text: string): void => {

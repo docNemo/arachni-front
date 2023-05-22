@@ -18,7 +18,7 @@ const ListPaper = () => {
     <Stack sx={{ flexGrow: 1, overflowY: "hidden" }}>
       <Stack sx={{ alignItems: "center", overflowY: "auto", flexGrow: 1 }}>
         {store.articles.map((article) => (
-          <Article key={article.id} article={article} />
+          <Article key={article.idArticle} article={article} />
         ))}
       </Stack>
       <Stack sx={{ alignItems: "center" }}>
