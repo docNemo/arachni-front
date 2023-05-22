@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
-import store, { IArticle } from "./Store";
+import store from "./Store";
 import TextField from "@mui/material/TextField";
 
 const ArticleEditor = () => {
@@ -16,10 +16,10 @@ const ArticleEditor = () => {
     store.selectArticle?.title.trim() ?? ""
   );
   const [categories, setCategories] = useState<string>(
-    store.selectArticle?.categories.trim() ?? ""
+    store.selectArticle?.categories.join("/") ?? ""
   );
   const [text, setText] = useState<string>(
-    store.selectArticle?.text.trim() ?? ""
+    store.selectArticle?.text?.trim() ?? ""
   );
   const [edit, setEdit] = useState<boolean>(false);
   const [change, setChange] = useState<boolean>(false);
@@ -37,14 +37,14 @@ const ArticleEditor = () => {
   useEffect(() => {
     setChange(
       title.trim() !== store.selectArticle?.title.trim() ||
-        categories.trim() !== store.selectArticle?.categories.trim() ||
-        text.trim() !== store.selectArticle?.text.trim()
+        categories.trim() !== store.selectArticle?.categories.join("/") ||
+        text.trim() !== store.selectArticle?.text?.trim()
     );
     setErrCategories(
       categories
         .split("/")
         .map((str) => str.trim())
-        .some((str) => (str === ""))
+        .some((str) => str === "")
     );
   });
 
@@ -79,7 +79,9 @@ const ArticleEditor = () => {
           size="small"
           label={"Категория"}
           error={errCategories}
-          helperText={errCategories ? "Категория должна быть в формате: кат1/кат2..." : ""}
+          helperText={
+            errCategories ? "Категория должна быть в формате: кат1/кат2..." : ""
+          }
           value={categories}
           onChange={(e) => setCategories(e.target.value)}
           InputProps={edit ? readOnly : {}}
