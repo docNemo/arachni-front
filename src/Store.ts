@@ -73,6 +73,9 @@ class Store {
   ): void => {
     fetch(`${window.location.origin}${this.url}`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         title: title,
         categories: categories.split("/"),
