@@ -119,7 +119,7 @@ class Store {
       return;
     }
     fetch(
-      `${window.location.origin}${this.url}.${this.selectArticle.idArticle}`,
+      `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
       {
         method: "PUT",
         headers: {
