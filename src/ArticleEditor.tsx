@@ -36,6 +36,7 @@ const ArticleEditor = () => {
       text
     );
     setUpdDlg(false);
+    setChange(false);
   };
   const close = () => store.setEditor();
   const onEditMod = () => {
