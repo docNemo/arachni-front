@@ -3,6 +3,8 @@ import { observer } from "mobx-react-lite";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
@@ -24,6 +26,7 @@ const ArticleEditor = () => {
   const [edit, setEdit] = useState<boolean>(false);
   const [change, setChange] = useState<boolean>(false);
   const [errCategories, setErrCategories] = useState<boolean>(false);
+  const [updDlg, setUpdDlg] = useState<boolean>(false);
 
   const update = () => store.onUpdArticle(title, categories, text);
   const close = () => store.setEditor();
@@ -47,73 +50,89 @@ const ArticleEditor = () => {
   });
 
   return (
-    <Dialog open={store.isOpenEditor}>
-      <DialogTitle sx={{ display: "flex", backgroundColor: "#0288d1" }}>
-        <Box flexGrow={1}>
-          <IconButton
-            sx={{ color: "white", opacity: edit ? 1 : 0.5 }}
-            onClick={() => setEdit(!edit)}
-          >
-            <EditIcon />
+    <>
+      <Dialog open={store.isOpenEditor}>
+        <DialogTitle sx={{ display: "flex", backgroundColor: "#0288d1" }}>
+          <Box flexGrow={1}>
+            <IconButton
+              sx={{ color: "white", opacity: edit ? 1 : 0.5 }}
+              onClick={() => setEdit(!edit)}
+            >
+              <EditIcon />
+            </IconButton>
+            <Button
+              onClick={() => setUpdDlg(!updDlg)}
+              disabled={!(edit && change)}
+              sx={{ color: "white" }}
+            >
+              Обновить
+            </Button>
+          </Box>
+          <IconButton onClick={close}>
+            <CloseIcon sx={{ color: "white" }} />
           </IconButton>
-          <Button
-            onClick={update}
-            disabled={!(edit && change)}
-            sx={{ color: "white" }}
-          >
-            Обновить
-          </Button>
-        </Box>
-        <IconButton onClick={close}>
-          <CloseIcon sx={{ color: "white" }} />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent sx={{ paddingTop: "20px !important" }}>
-        <TextField
-          fullWidth
-          variant="standard"
-          size="small"
-          label={"Название"}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          InputProps={edit ? {} : readOnly}
-        />
-        <TextField
-          fullWidth
-          variant="standard"
-          size="small"
-          label={"Категория"}
-          error={errCategories}
-          helperText={
-            errCategories ? "Категория должна быть в формате: кат1/кат2..." : ""
-          }
-          value={categories}
-          onChange={(e) => setCategories(e.target.value)}
-          InputProps={edit ? {} : readOnly}
-        />
-        <TextField
-          fullWidth
-          multiline
-          variant="standard"
-          size="small"
-          rows={10}
-          label={"Текст статьи"}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          InputProps={edit ? {} : readOnly}
-        />
-        <TextField
-          fullWidth
-          variant="standard"
-          size="small"
-          label={"Автор"}
-          value={store.selectArticle?.creator}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+        </DialogTitle>
+        <DialogContent sx={{ paddingTop: "20px !important" }}>
+          <TextField
+            fullWidth
+            variant="standard"
+            size="small"
+            label={"Название"}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            InputProps={edit ? {} : readOnly}
+          />
+          <TextField
+            fullWidth
+            variant="standard"
+            size="small"
+            label={"Категория"}
+            error={errCategories}
+            helperText={
+              errCategories
+                ? "Категория должна быть в формате: кат1/кат2..."
+                : ""
+            }
+            value={categories}
+            onChange={(e) => setCategories(e.target.value)}
+            InputProps={edit ? {} : readOnly}
+          />
+          <TextField
+            fullWidth
+            multiline
+            variant="standard"
+            size="small"
+            rows={10}
+            label={"Текст статьи"}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            InputProps={edit ? {} : readOnly}
+          />
+          <TextField
+            fullWidth
+            variant="standard"
+            size="small"
+            label={"Автор"}
+            value={store.selectArticle?.creator}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={store.isOpenDelDlg}>
+        <DialogTitle>Обновление</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Вы точно хотите обновить статью?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={update}>Обновить</Button>
+          <Button onClick={() => setUpdDlg(!updDlg)}>Закрыть</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

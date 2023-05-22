@@ -115,17 +115,23 @@ class Store {
   };
 
   onUpdArticle = (title: string, categories: string, text: string): void => {
-    fetch(`${window.location.origin}${this.url}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: title,
-        categories: categories,
-        text: text,
-      }),
-    })
+    if (!this.selectArticle) {
+      return;
+    }
+    fetch(
+      `${window.location.origin}${this.url}.${this.selectArticle.idArticle}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title,
+          categories: categories,
+          text: text,
+        }),
+      }
+    )
       .then((res: Response) => res.json())
       .then((res: IArticle) => {
         const index = this.articles.findIndex(
@@ -133,6 +139,7 @@ class Store {
         );
         this.articles[index] = res;
         this.articles = [...this.articles];
+        this.selectArticle = res;
       });
   };
 }
