@@ -114,7 +114,7 @@ class Store {
     });
   };
 
-  onUpdArticle = (title: string, categories: string, text: string): void => {
+  onUpdArticle = (title: string, categories: Array<string>, text: string): void => {
     if (!this.selectArticle) {
       return;
     }

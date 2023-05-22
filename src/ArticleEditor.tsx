@@ -29,7 +29,12 @@ const ArticleEditor = () => {
   const [updDlg, setUpdDlg] = useState<boolean>(false);
   const [resetDlg, setResetDlg] = useState<boolean>(false);
 
-  const update = () => store.onUpdArticle(title, categories, text);
+  const update = () =>
+    store.onUpdArticle(
+      title,
+      categories.split("/").map((str) => str.trim()),
+      text
+    );
   const close = () => store.setEditor();
   const onEditMod = () => {
     if (!edit) {
