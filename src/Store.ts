@@ -6,6 +6,7 @@ export interface IArticle {
   categories: Array<string>;
   creator: string;
   creationDate: string;
+  text?: string;
 }
 
 interface IArticleListResponse {
@@ -18,6 +19,7 @@ class Store {
   private readonly url: string;
   articles: Array<IArticle> = [];
   countPage: number = 0;
+  page: number = 0;
   selectArticle?: IArticle;
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
@@ -31,6 +33,7 @@ class Store {
   }
 
   loadArticles = (page: number): void => {
+    this.page = page;
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
@@ -53,12 +56,12 @@ class Store {
   };
 
   setEditor = (article?: IArticle): void => {
-    // fetch(`${window.location.origin}${this.url}/${article.id}`, {
-    //   method: "GET",
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
-    this.selectArticle = article && { ...article };
+    article &&
+      fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((res) => (this.selectArticle = res));
     this.isOpenEditor = !this.isOpenEditor;
   };
 
@@ -68,41 +71,64 @@ class Store {
     text: string,
     creator: string
   ): void => {
-    // fetch(`${window.location.origin}${this.url}`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     title: title,
-    //     categories: categories,
-    //     text: text,
-    //     creator: creator,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
+    fetch(`${window.location.origin}${this.url}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        categories: categories.split("/").map((str) => str.trim()),
+        text: text,
+        creator: creator,
+      }),
+    })
+      .then((res: Response) => res.json())
+      .then((res: IArticle) => {
+        if (this.articles.length === this.countArticlePage) {
+          this.articles.pop();
+        }
+        delete res.text;
+        this.articles.unshift(res);
+        this.setAddDlg();
+      });
   };
 
   onDelArticle = (): void => {
     if (!this.selectArticle) {
       return;
     }
-    // fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
+    fetch(
+      `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
+      { method: "DELETE" }
+    ).then((res) => {
+      if (res.status === 200) {
+        this.loadArticles(this.page);
+        this.setDelDlg();
+      }
+    });
   };
 
   onUpdArticle = (title: string, categories: string, text: string): void => {
-    // fetch(`${window.location.origin}${this.url}`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     title: title,
-    //     categories: categories,
-    //     text: text,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
+    fetch(`${window.location.origin}${this.url}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        categories: categories,
+        text: text,
+      }),
+    })
+      .then((res: Response) => res.json())
+      .then((res: IArticle) => {
+        const index = this.articles.findIndex(
+          (article) => article.idArticle === res.idArticle
+        );
+        this.articles[index] = res;
+        this.articles = [...this.articles];
+      });
   };
 }
 
