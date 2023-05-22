@@ -33,20 +33,37 @@ jobs:
         with:
           network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
 
-      - name: Install oc
-        uses: redhat-actions/openshift-tools-installer@v1
-        with:
-          oc: 4
+      - name: Get DNS server from zerotier
+        id: dns
+        run: |
+          echo "dns=$(sudo zerotier-cli -j listnetworks | jq '.[].dns.servers[0]')" >> $GITHUB_ENV
 
       - name: Add OS host to resolv.conf
         run: |
           sudo mv /etc/resolv.conf /etc/resolv1.conf
           cat /etc/resolv1.conf | sudo tee -a /etc/resolv.conf
-          echo "nameserver ${{ secrets.DNS_IP }}" | sudo tee -a /etc/resolv.conf
+          echo "nameserver ${{ env.dns }}" | sudo tee -a /etc/resolv.conf
+
+      - name: Install oc
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          oc: 4
 
       - name: Log in to OpenShift
         run: |
-          oc login -u ${{ secrets.LOGIN_OS }} -p ${{ secrets.PASSWORD_OS }} --server=https://${{ secrets.OPENSHIFT_SERVER }}:6443 --insecure-skip-tls-verify
+          max_iteration=3
+          iteration=1
+          until oc login -u ${{ secrets.LOGIN_OS }} -p ${{ secrets.PASSWORD_OS }} --server=https://${{ secrets.OPENSHIFT_SERVER }}:6443 --insecure-skip-tls-verify
+          do
+              echo "Unsuccessful login to OS $iteration"
+              if [[ $iteration -eq $max_iteration ]]
+              then
+                break
+              fi
+          
+              sleep 15
+              ((iteration++)) 
+          done          
           oc project ${{ env.OS_PROJECT }}
 
       - run: oc whoami
