@@ -21,6 +21,7 @@ class Store {
   selectArticle?: IArticle;
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
+  isOpenEditor: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -44,20 +45,21 @@ class Store {
       });
   };
 
-  setAddDlg = () => (this.isOpenAddDlg = !this.isOpenAddDlg);
+  setAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
 
-  setDelDlg = (article?: IArticle) => {
+  setDelDlg = (article?: IArticle): void => {
     this.selectArticle = article;
     this.isOpenDelDlg = !this.isOpenDelDlg;
   };
 
-  setOpenArticle = (article: IArticle) => {
-    // fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
+  setEditor = (article?: IArticle): void => {
+    // fetch(`${window.location.origin}${this.url}/${article.id}`, {
     //   method: "GET",
     // })
     //   .then((res) => res.json())
     //   .then((res) => console.debug(res));
-    // this.selectArticle = article;
+    this.selectArticle = article && { ...article };
+    this.isOpenEditor = !this.isOpenEditor;
   };
 
   onAddArticle = (
