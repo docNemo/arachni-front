@@ -34,7 +34,7 @@ class Store {
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
-      (page - 1 * this.countArticlePage).toString()
+      ((page - 1) * this.countArticlePage).toString()
     );
     url.searchParams.append("limit", this.countArticlePage.toString());
     fetch(url, { method: "GET" })
