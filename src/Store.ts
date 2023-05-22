@@ -26,7 +26,7 @@ class Store {
   constructor() {
     makeAutoObservable(this);
     this.countArticlePage = 25;
-    this.url = "/api/article";
+    this.url = "http://arachni-back-develop.apps.os-lab-1.neo/api/article";
     this.loadArticles(1);
   }
 
@@ -68,7 +68,7 @@ class Store {
     text: string,
     creator: string
   ): void => {
-    fetch(`${window.location.origin}${this.url}`, {
+    fetch(this.url, {
       method: "POST",
       body: JSON.stringify({
         title: title,
