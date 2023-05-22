@@ -68,17 +68,21 @@ class Store {
     text: string,
     creator: string
   ): void => {
-    // fetch(`${window.location.origin}${this.url}`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     title: title,
-    //     categories: categories,
-    //     text: text,
-    //     creator: creator,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
+    fetch(`${window.location.origin}${this.url}`, {
+      method: "POST",
+      body: JSON.stringify({
+        title: title,
+        categories: categories.split("/"),
+        text: text,
+        creator: creator,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        this.articles.pop();
+        delete res.text;
+        this.articles.unshift(res);
+      });
   };
 
   onDelArticle = (): void => {
