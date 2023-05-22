@@ -19,6 +19,7 @@ class Store {
   private readonly url: string;
   articles: Array<IArticle> = [];
   countPage: number = 0;
+  page: number = 0;
   selectArticle?: any;
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
@@ -32,6 +33,7 @@ class Store {
   }
 
   loadArticles = (page: number): void => {
+    this.page = page;
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
@@ -90,11 +92,9 @@ class Store {
     if (!this.selectArticle) {
       return;
     }
-    // fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
+    fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
+      method: "DELETE",
+    }).then((res) => res.status === 200 && this.loadArticles(this.page));
   };
 
   onUpdArticle = (title: string, categories: string, text: string): void => {
