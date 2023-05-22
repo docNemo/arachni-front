@@ -78,16 +78,19 @@ class Store {
       },
       body: JSON.stringify({
         title: title,
-        categories: categories.split("/"),
+        categories: categories.split("/").map((str) => str.trim()),
         text: text,
         creator: creator,
       }),
     })
       .then((res: Response) => res.json())
       .then((res: IArticle) => {
-        this.articles.pop();
+        if (this.articles.length === this.countArticlePage) {
+          this.articles.pop();
+        }
         delete res.text;
         this.articles.unshift(res);
+        this.setAddDlg();
       });
   };
 
@@ -98,7 +101,12 @@ class Store {
     fetch(
       `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
       { method: "DELETE" }
-    ).then((res) => res.status === 200 && this.loadArticles(this.page));
+    ).then((res) => {
+      if (res.status === 200) {
+        this.loadArticles(this.page);
+        this.setDelDlg();
+      }
+    });
   };
 
   onUpdArticle = (title: string, categories: string, text: string): void => {
