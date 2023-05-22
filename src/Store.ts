@@ -20,7 +20,7 @@ class Store {
   articles: Array<IArticle> = [];
   countPage: number = 0;
   page: number = 0;
-  selectArticle?: any;
+  selectArticle?: IArticle;
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
@@ -83,8 +83,8 @@ class Store {
         creator: creator,
       }),
     })
-      .then((res) => res.json())
-      .then((res) => {
+      .then((res: Response) => res.json())
+      .then((res: IArticle) => {
         this.articles.pop();
         delete res.text;
         this.articles.unshift(res);
@@ -95,22 +95,32 @@ class Store {
     if (!this.selectArticle) {
       return;
     }
-    fetch(`${window.location.origin}${this.url}/${this.selectArticle.id}`, {
-      method: "DELETE",
-    }).then((res) => res.status === 200 && this.loadArticles(this.page));
+    fetch(
+      `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
+      { method: "DELETE" }
+    ).then((res) => res.status === 200 && this.loadArticles(this.page));
   };
 
   onUpdArticle = (title: string, categories: string, text: string): void => {
-    // fetch(`${window.location.origin}${this.url}`, {
-    //   method: "POST",
-    //   body: JSON.stringify({
-    //     title: title,
-    //     categories: categories,
-    //     text: text,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => console.debug(res));
+    fetch(`${window.location.origin}${this.url}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        categories: categories,
+        text: text,
+      }),
+    })
+      .then((res: Response) => res.json())
+      .then((res: IArticle) => {
+        const index = this.articles.findIndex(
+          (article) => article.idArticle === res.idArticle
+        );
+        this.articles[index] = res;
+        this.articles = [...this.articles];
+      });
   };
 }
 
