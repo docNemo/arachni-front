@@ -13,7 +13,7 @@ const Header = () => {
     <AppBar component={"nav"} sx={{ position: "relative" }}>
       <Toolbar>
         <Typography variant={"h5"} sx={{ flexGrow: 1 }}>
-          TermPaper
+          Курсовая работа
         </Typography>
         <Box display={"flex"}>
           <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
