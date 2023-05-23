@@ -20,11 +20,12 @@ const Article = ({ article }: IArticleProps) => {
     <Paper
       key={article.idArticle}
       elevation={8}
-      onDoubleClick={open}
+      onClick={open}
       sx={{
         padding: "4px",
         marginBottom: "8px",
         width: "600px",
+        userSelect: "none",
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
