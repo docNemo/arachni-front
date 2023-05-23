@@ -47,7 +47,7 @@ const ArticleAddDlg = () => {
   });
 
   return (
-    <Dialog open={store.isOpenAddDlg}>
+    <Dialog open={store.isOpenAddDlg} PaperProps={{ sx: { maxWidth: "none" } }}>
       <DialogTitle>Создание новой статьи</DialogTitle>
       <DialogContent>
         <TextField
@@ -84,6 +84,7 @@ const ArticleAddDlg = () => {
           onChange={(e) => setText(e.target.value)}
         />
         <TextField
+          disabled
           fullWidth
           variant="standard"
           size="small"
