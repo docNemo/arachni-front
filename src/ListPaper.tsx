@@ -8,6 +8,7 @@ import Article from "./Article";
 import ArticleEditor from "./ArticleEditor";
 import ArticleAddDlg from "./ArticleAddDlg";
 import ArticleDelDlg from "./ArticleDelDlg";
+import InfoBox from "./InfoBox";
 
 const ListPaper = () => {
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) =>
@@ -48,6 +49,7 @@ const ListPaper = () => {
       <ArticleAddDlg />
       <ArticleDelDlg />
       {store.isOpenEditor && <ArticleEditor />}
+      <InfoBox {...store.infoBox} />
     </>
   );
 };

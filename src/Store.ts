@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { State, IInfoBox } from "./InfoBox";
 
 export interface IArticle {
   idArticle: string;
@@ -14,6 +15,11 @@ interface IArticleListResponse {
   count: number;
 }
 
+interface IErrorResponse {
+  errorCode: string;
+  message: string;
+}
+
 export enum SortBy {
   DATE = "Дата",
   TITLE = "Название",
@@ -24,13 +30,19 @@ class Store {
   private readonly countArticlePage: number = 25;
   private readonly url: string = "/api/article";
   articles: Array<IArticle> = [];
-  countPage: number = 1;
-  page: number = 1;
+  countArticles: number = 0;
+  countPage: number = 0;
+  page: number = 0;
   selectArticle?: IArticle;
   searchText: string = "";
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
+  infoBox: IInfoBox = {
+    open: false,
+    text: "",
+    close: () => this.setInfoBox(),
+  };
   sortBy: string = "DATE";
   orderBy: "ASC" | "DESC" = "DESC";
 
@@ -105,7 +117,9 @@ class Store {
         creator: creator,
       }),
     })
-      .then((res: Response) => res.json())
+      .then((res: Response) =>
+        res.status === 200 ? res.json() : Promise.reject(res)
+      )
       .then((res: IArticle) => {
         if (this.articles.length === this.countArticlePage) {
           this.articles.pop();
@@ -113,7 +127,10 @@ class Store {
         delete res.text;
         this.articles.unshift(res);
         this.setAddDlg();
-      });
+        this.countArticles = this.countArticles + 1;
+        this.countPage = Math.ceil(this.countArticles / this.countArticlePage);
+      })
+      .catch(this.errorHandler)
   };
 
   onDelArticle = (): void => {
@@ -123,7 +140,7 @@ class Store {
     fetch(
       `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
       { method: "DELETE" }
-    ).then((res) => {
+    ).then((res: Response) => {
       if (res.status === 200) {
         this.loadArticles();
         this.setDelDlg();
@@ -163,6 +180,21 @@ class Store {
         this.selectArticle = res;
       });
   };
+
+  setInfoBox = (text?: string, state?: State): void => {
+    let newState: IInfoBox = {
+      open: text !== undefined,
+      text: text ?? "",
+      close: this.infoBox.close,
+    };
+    state && (newState.state = state);
+    this.infoBox = newState;
+  };
+
+  errorHandler = (err: Response) =>
+    err
+      .json()
+      .then((res: IErrorResponse) => this.setInfoBox(res.message, "error"));
 
   setSortBy = (str: string) => {
     this.sortBy = str;
