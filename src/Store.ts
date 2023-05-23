@@ -28,7 +28,7 @@ export enum SortBy {
 
 class Store {
   private readonly countArticlePage: number = 25;
-  private readonly url: string = "/api/article";
+  private readonly url: string = "/api/artic";
   articles: Array<IArticle> = [];
   countArticles: number = 0;
   countPage: number = 1;
@@ -201,9 +201,9 @@ class Store {
   };
 
   errorHandler = (err: Response) =>
-    err
-      .json()
-      .then((res: IErrorResponse) => this.setInfoBox(res.message, "error"));
+    err.json().then((res: IErrorResponse) => {
+      this.setInfoBox(res.message, "error");
+    });
 
   setSortBy = (str: string) => {
     this.sortBy = str;
