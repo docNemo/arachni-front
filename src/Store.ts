@@ -28,7 +28,7 @@ export enum SortBy {
 
 class Store {
   private readonly countArticlePage: number = 25;
-  private readonly url: string = "/api/artic";
+  private readonly url: string = "/api/article";
   articles: Array<IArticle> = [];
   countArticles: number = 0;
   countPage: number = 1;
@@ -135,8 +135,10 @@ class Store {
         this.setAddDlg();
         this.countArticles = this.countArticles + 1;
         this.countPage = Math.ceil(this.countArticles / this.countArticlePage);
+        this.setInfoBox(`Добавлена статья ${res.title}`, "success");
       })
-      .catch(this.errorHandler);
+      .catch(this.errorHandler)
+      .then(this.setAddDlg);
   };
 
   onDelArticle = (): void => {
@@ -146,12 +148,20 @@ class Store {
     fetch(
       `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
       { method: "DELETE" }
-    ).then((res: Response) => {
-      if (res.status === 200) {
-        this.loadArticles();
-        this.setDelDlg();
-      }
-    });
+    )
+      .then((res: Response) => {
+        if (res.status === 200) {
+          this.setInfoBox(
+            `Удалена статья: ${this.selectArticle?.title}`,
+            "success"
+          );
+          this.loadArticles();
+          this.setDelDlg();
+          return;
+        }
+        Promise.reject(res);
+      })
+      .catch(this.errorHandler);
   };
 
   onUpdArticle = (
@@ -186,6 +196,7 @@ class Store {
         this.articles[index] = res;
         this.articles = [...this.articles];
         this.selectArticle = res;
+        this.setInfoBox(`Обновлена статья: ${res.title}`, "success");
       })
       .catch(this.errorHandler);
   };
