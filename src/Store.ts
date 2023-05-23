@@ -15,10 +15,10 @@ interface IArticleListResponse {
 }
 
 class Store {
-  private readonly countArticlePage: number;
-  private readonly url: string;
+  private readonly countArticlePage: number = 25;
+  private readonly url: string = "/api/article";
   articles: Array<IArticle> = [];
-  countPage: number = 0;
+  countPage: number = 1;
   page: number = 1;
   selectArticle?: IArticle;
   searchText: string = "";
@@ -28,8 +28,6 @@ class Store {
 
   constructor() {
     makeAutoObservable(this);
-    this.countArticlePage = 25;
-    this.url = "/api/article";
     this.loadArticles();
   }
 
