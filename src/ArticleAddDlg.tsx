@@ -84,7 +84,6 @@ const ArticleAddDlg = () => {
           onChange={(e) => setText(e.target.value)}
         />
         <TextField
-          disabled
           fullWidth
           variant="standard"
           size="small"

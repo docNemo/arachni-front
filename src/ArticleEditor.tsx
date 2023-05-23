@@ -140,6 +140,7 @@ const ArticleEditor = () => {
             InputProps={edit ? {} : readOnly}
           />
           <TextField
+            disabled
             fullWidth
             variant="standard"
             size="small"
@@ -183,7 +184,7 @@ const ArticleEditor = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => store.setEditor}>Сбросить</Button>
+          <Button onClick={() => store.setEditor()}>Сбросить</Button>
           <Button onClick={() => setCloseDlg(false)}>Закрыть</Button>
         </DialogActions>
       </Dialog>
