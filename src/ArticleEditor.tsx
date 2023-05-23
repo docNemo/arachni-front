@@ -28,6 +28,7 @@ const ArticleEditor = () => {
   const [errCategories, setErrCategories] = useState<boolean>(false);
   const [updDlg, setUpdDlg] = useState<boolean>(false);
   const [resetDlg, setResetDlg] = useState<boolean>(false);
+  const [closeDlg, setCloseDlg] = useState<boolean>(false);
 
   const update = () => {
     store.onUpdArticle(
@@ -38,7 +39,8 @@ const ArticleEditor = () => {
     setUpdDlg(false);
     setChange(false);
   };
-  const close = () => store.setEditor();
+  const close = () =>
+    edit && change && !errCategories ? setCloseDlg(true) : store.setEditor();
   const onEditMod = () => {
     if (!edit) {
       setEdit(true);
@@ -77,7 +79,10 @@ const ArticleEditor = () => {
 
   return (
     <>
-      <Dialog open={store.isOpenEditor} PaperProps={{ sx: { maxWidth: "none" } }}>
+      <Dialog
+        open={store.isOpenEditor}
+        PaperProps={{ sx: { maxWidth: "none" } }}
+      >
         <DialogTitle sx={{ display: "flex", backgroundColor: "#0288d1" }}>
           <Box flexGrow={1}>
             <IconButton
@@ -135,6 +140,7 @@ const ArticleEditor = () => {
             InputProps={edit ? {} : readOnly}
           />
           <TextField
+            disabled
             fullWidth
             variant="standard"
             size="small"
@@ -168,6 +174,18 @@ const ArticleEditor = () => {
         <DialogActions>
           <Button onClick={reset}>Сбросить</Button>
           <Button onClick={() => setResetDlg(false)}>Закрыть</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={closeDlg}>
+        <DialogTitle>Закрыть статью</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            При закрытии статьи не будут сохранены изменения!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => store.setEditor()}>Сбросить</Button>
+          <Button onClick={() => setCloseDlg(false)}>Закрыть</Button>
         </DialogActions>
       </Dialog>
     </>
