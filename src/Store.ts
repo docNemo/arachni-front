@@ -21,6 +21,7 @@ class Store {
   countPage: number = 0;
   page: number = 0;
   selectArticle?: IArticle;
+  searchText: string = "";
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
@@ -47,6 +48,10 @@ class Store {
         this.countPage = Math.ceil(res.count / this.countArticlePage);
       });
   };
+
+  search = (): void => {};
+
+  setSearchText = (str: string): string => (this.searchText = str);
 
   setAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
 

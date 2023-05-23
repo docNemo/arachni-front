@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import store from "./Store";
+import Search from "./Search";
 
 const Header = () => {
   return (
@@ -16,6 +17,7 @@ const Header = () => {
           Курсовая работа
         </Typography>
         <Box display={"flex"}>
+          <Search />
           <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
             <AddIcon />
           </IconButton>
