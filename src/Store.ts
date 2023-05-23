@@ -24,6 +24,8 @@ class Store {
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
+  sortBy: string = "DATE";
+  orderBy: "ASC" | "DESC" = "ASC";
 
   constructor() {
     makeAutoObservable(this);
@@ -145,6 +147,14 @@ class Store {
         this.articles = [...this.articles];
         this.selectArticle = res;
       });
+  };
+
+  setSortBy = (str: string) => {
+    this.sortBy = str;
+  };
+
+  setOrderBy = () => {
+    this.orderBy = this.orderBy === "ASC" ? "DESC" : "ASC";
   };
 }
 
