@@ -10,9 +10,8 @@ import ArticleAddDlg from "./ArticleAddDlg";
 import ArticleDelDlg from "./ArticleDelDlg";
 
 const ListPaper = () => {
-  const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
-    store.loadArticles(page);
-  };
+  const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) =>
+    store.setPage(page);
 
   return (
     <>

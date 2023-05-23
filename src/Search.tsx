@@ -20,7 +20,7 @@ const Search = () => {
       <IconButton
         size="small"
         sx={{ minWidth: 0, color: "#c0c0c0" }}
-        onClick={store.search}
+        onClick={store.loadArticles}
       >
         <SearchIcon />
       </IconButton>
@@ -29,7 +29,7 @@ const Search = () => {
         onChange={(e) => store.setSearchText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            store.search();
+            store.loadArticles();
             e.preventDefault();
           }
         }}

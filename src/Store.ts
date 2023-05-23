@@ -19,7 +19,7 @@ class Store {
   private readonly url: string;
   articles: Array<IArticle> = [];
   countPage: number = 0;
-  page: number = 0;
+  page: number = 1;
   selectArticle?: IArticle;
   searchText: string = "";
   isOpenAddDlg: boolean = false;
@@ -30,17 +30,18 @@ class Store {
     makeAutoObservable(this);
     this.countArticlePage = 25;
     this.url = "/api/article";
-    this.loadArticles(1);
+    this.loadArticles();
   }
 
-  loadArticles = (page: number): void => {
-    this.page = page;
+  loadArticles = (): void => {
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
-      ((page - 1) * this.countArticlePage).toString()
+      ((this.page - 1) * this.countArticlePage).toString()
     );
     url.searchParams.append("limit", this.countArticlePage.toString());
+    this.searchText.trim() &&
+      url.searchParams.append("searchString", this.searchText.trim());
     fetch(url, { method: "GET" })
       .then((res: Response) => res.json())
       .then((res: IArticleListResponse) => {
@@ -49,9 +50,15 @@ class Store {
       });
   };
 
-  search = (): void => {};
+  setSearchText = (str: string): void => {
+    this.searchText = str;
+    this.page = 1;
+  };
 
-  setSearchText = (str: string): string => (this.searchText = str);
+  setPage = (page: number): void => {
+    this.page = page;
+    this.loadArticles();
+  };
 
   setAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
 
@@ -113,7 +120,7 @@ class Store {
       { method: "DELETE" }
     ).then((res) => {
       if (res.status === 200) {
-        this.loadArticles(this.page);
+        this.loadArticles();
         this.setDelDlg();
       }
     });
