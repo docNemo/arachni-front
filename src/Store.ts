@@ -166,10 +166,14 @@ class Store {
 
   setSortBy = (str: string) => {
     this.sortBy = str;
+    this.page = 1;
+    this.loadArticles();
   };
 
   setOrderBy = () => {
     this.orderBy = this.orderBy === "ASC" ? "DESC" : "ASC";
+    this.page = 1;
+    this.loadArticles();
   };
 }
 
