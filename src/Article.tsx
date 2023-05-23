@@ -1,5 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
+import moment from "moment";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -36,7 +37,7 @@ const Article = ({ article }: IArticleProps) => {
             {article.categories.join("/")}
           </Typography>
           <Typography align="right" variant="body2" color={"#666666"}>
-            {article.creator} ({article.creationDate})
+            {article.creator} ({moment.utc(article.creationDate).fromNow()})
           </Typography>
         </Stack>
         <IconButton onClick={delArticle}>

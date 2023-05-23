@@ -14,38 +14,55 @@ interface IArticleListResponse {
   count: number;
 }
 
+export enum SortBy {
+  DATE = "Дата",
+  TITLE = "Название",
+  CREATOR = "Автор",
+}
+
 class Store {
-  private readonly countArticlePage: number;
-  private readonly url: string;
+  private readonly countArticlePage: number = 25;
+  private readonly url: string = "/api/article";
   articles: Array<IArticle> = [];
-  countPage: number = 0;
-  page: number = 0;
+  countPage: number = 1;
+  page: number = 1;
   selectArticle?: IArticle;
+  searchText: string = "";
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
+  sortBy: string = "DATE";
+  orderBy: "ASC" | "DESC" = "DESC";
 
   constructor() {
     makeAutoObservable(this);
-    this.countArticlePage = 25;
-    this.url = "/api/article";
-    this.loadArticles(1);
+    this.loadArticles();
   }
 
-  loadArticles = (page: number): void => {
-    this.page = page;
+  loadArticles = (): void => {
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
-      ((page - 1) * this.countArticlePage).toString()
+      ((this.page - 1) * this.countArticlePage).toString()
     );
     url.searchParams.append("limit", this.countArticlePage.toString());
+    url.searchParams.append("order", this.orderBy);
+    url.searchParams.append("sortBy", this.sortBy);
+    this.searchText.trim() &&
+      url.searchParams.append("searchString", this.searchText.trim());
     fetch(url, { method: "GET" })
       .then((res: Response) => res.json())
       .then((res: IArticleListResponse) => {
         this.articles = res.articles;
         this.countPage = Math.ceil(res.count / this.countArticlePage);
       });
+  };
+
+  setSearchText = (str: string): string => (this.searchText = str);
+
+  setPage = (page: number): void => {
+    this.page = page;
+    this.loadArticles();
   };
 
   setAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
@@ -108,24 +125,34 @@ class Store {
       { method: "DELETE" }
     ).then((res) => {
       if (res.status === 200) {
-        this.loadArticles(this.page);
+        this.loadArticles();
         this.setDelDlg();
       }
     });
   };
 
-  onUpdArticle = (title: string, categories: string, text: string): void => {
-    fetch(`${window.location.origin}${this.url}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: title,
-        categories: categories,
-        text: text,
-      }),
-    })
+  onUpdArticle = (
+    title: string,
+    categories: Array<string>,
+    text: string
+  ): void => {
+    if (!this.selectArticle) {
+      return;
+    }
+    fetch(
+      `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: title,
+          categories: categories,
+          text: text,
+        }),
+      }
+    )
       .then((res: Response) => res.json())
       .then((res: IArticle) => {
         const index = this.articles.findIndex(
@@ -133,7 +160,20 @@ class Store {
         );
         this.articles[index] = res;
         this.articles = [...this.articles];
+        this.selectArticle = res;
       });
+  };
+
+  setSortBy = (str: string) => {
+    this.sortBy = str;
+    this.page = 1;
+    this.loadArticles();
+  };
+
+  setOrderBy = () => {
+    this.orderBy = this.orderBy === "ASC" ? "DESC" : "ASC";
+    this.page = 1;
+    this.loadArticles();
   };
 }
 
