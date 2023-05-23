@@ -201,9 +201,14 @@ class Store {
   };
 
   errorHandler = (err: Response) =>
-    err.json().then((res: IErrorResponse) => {
-      this.setInfoBox(res.message, "error");
-    });
+    err
+      .json()
+      .then((res: IErrorResponse | any) =>
+        this.setInfoBox(
+          res.message ?? `${res.status ?? ""} ${res.error ?? ""}`,
+          "error"
+        )
+      );
 
   setSortBy = (str: string) => {
     this.sortBy = str;
