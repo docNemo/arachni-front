@@ -15,6 +15,11 @@ interface IArticleListResponse {
   count: number;
 }
 
+interface IErrorResponse {
+  errorCode: string;
+  message: string;
+}
+
 class Store {
   private readonly countArticlePage: number;
   private readonly url: string;
@@ -27,9 +32,8 @@ class Store {
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
   infoBox: IInfoBox = {
-    open: true,
-    text: "Привет",
-    state: "success",
+    open: false,
+    text: "",
     close: () => this.setInfoBox(),
   };
 
@@ -109,12 +113,7 @@ class Store {
         this.countArticles = this.countArticles + 1;
         this.countPage = Math.ceil(this.countArticles / this.countArticlePage);
       })
-      .catch((res: Response) => {
-        return res.json();
-      })
-      .then((res) => {
-        console.log(res);
-      });
+      .catch(this.errorHandler)
   };
 
   onDelArticle = (): void => {
@@ -174,6 +173,11 @@ class Store {
     state && (newState.state = state);
     this.infoBox = newState;
   };
+
+  errorHandler = (err: Response) =>
+    err
+      .json()
+      .then((res: IErrorResponse) => this.setInfoBox(res.message, "error"));
 }
 
 export default new Store();
