@@ -5,9 +5,9 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import store from "./Store";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import store, { SortBy } from "./Store";
 
 const Filter = () => (
   <Box
@@ -29,15 +29,15 @@ const Filter = () => (
         value={store.sortBy}
         onChange={(e) => store.setSortBy(e.target.value)}
       >
-        <MenuItem value={"DATE"}>Дата</MenuItem>
+        {Object.keys(SortBy).map((key) => (
+          <MenuItem key={key} value={key}>
+            {SortBy[key as keyof typeof SortBy]}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
     <IconButton onClick={store.setOrderBy}>
-      {store.orderBy === "ASC" ? (
-        <KeyboardArrowUpIcon />
-      ) : (
-        <KeyboardArrowDownIcon />
-      )}
+      {store.orderBy === "ASC" ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
     </IconButton>
   </Box>
 );

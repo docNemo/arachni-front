@@ -14,6 +14,12 @@ interface IArticleListResponse {
   count: number;
 }
 
+export enum SortBy {
+  DATE = "Дата",
+  TITLE = "Название",
+  CREATOR = "Автор",
+}
+
 class Store {
   private readonly countArticlePage: number = 25;
   private readonly url: string = "/api/article";
@@ -26,7 +32,7 @@ class Store {
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
   sortBy: string = "DATE";
-  orderBy: "ASC" | "DESC" = "ASC";
+  orderBy: "ASC" | "DESC" = "DESC";
 
   constructor() {
     makeAutoObservable(this);
@@ -40,6 +46,8 @@ class Store {
       ((this.page - 1) * this.countArticlePage).toString()
     );
     url.searchParams.append("limit", this.countArticlePage.toString());
+    url.searchParams.append("order", this.orderBy);
+    url.searchParams.append("sortBy", this.sortBy);
     this.searchText.trim() &&
       url.searchParams.append("searchString", this.searchText.trim());
     fetch(url, { method: "GET" })
