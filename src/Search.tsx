@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import store from "./Store";
 
 const Search = () => {
+  const search = () => store.setPage(1);
   return (
     <Box
       sx={{
@@ -20,7 +21,7 @@ const Search = () => {
       <IconButton
         size="small"
         sx={{ minWidth: 0, color: "#c0c0c0" }}
-        onClick={store.loadArticles}
+        onClick={search}
       >
         <SearchIcon />
       </IconButton>
@@ -29,7 +30,7 @@ const Search = () => {
         onChange={(e) => store.setSearchText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            store.loadArticles();
+            search();
             e.preventDefault();
           }
         }}

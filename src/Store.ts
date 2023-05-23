@@ -48,10 +48,7 @@ class Store {
       });
   };
 
-  setSearchText = (str: string): void => {
-    this.searchText = str;
-    this.page = 1;
-  };
+  setSearchText = (str: string): string => (this.searchText = str);
 
   setPage = (page: number): void => {
     this.page = page;
