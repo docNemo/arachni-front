@@ -77,7 +77,7 @@ const ArticleEditor = () => {
 
   return (
     <>
-      <Dialog open={store.isOpenEditor}>
+      <Dialog open={store.isOpenEditor} PaperProps={{ sx: { maxWidth: "none" } }}>
         <DialogTitle sx={{ display: "flex", backgroundColor: "#0288d1" }}>
           <Box flexGrow={1}>
             <IconButton

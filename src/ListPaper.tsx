@@ -11,9 +11,8 @@ import ArticleDelDlg from "./ArticleDelDlg";
 import InfoBox from "./InfoBox";
 
 const ListPaper = () => {
-  const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) => {
-    store.loadArticles(page);
-  };
+  const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) =>
+    store.setPage(page);
 
   return (
     <>
@@ -35,6 +34,7 @@ const ListPaper = () => {
               showFirstButton
               showLastButton
               count={store.countPage}
+              page={store.page}
               defaultPage={1}
               onChange={handleChangePage}
               sx={{
