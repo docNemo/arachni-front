@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { State, IInfoBox } from "./InfoBox";
 
 export interface IArticle {
   idArticle: string;
@@ -25,6 +26,12 @@ class Store {
   isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
   isOpenEditor: boolean = false;
+  infoBox: IInfoBox = {
+    open: true,
+    text: "Привет",
+    state: "success",
+    close: () => this.setInfoBox(),
+  };
 
   constructor() {
     makeAutoObservable(this);
@@ -148,6 +155,16 @@ class Store {
         this.articles = [...this.articles];
         this.selectArticle = res;
       });
+  };
+
+  setInfoBox = (text?: string, state?: State): void => {
+    let newState: IInfoBox = {
+      open: text !== undefined,
+      text: text ?? "",
+      close: this.infoBox.close,
+    };
+    state && (newState.state = state);
+    this.infoBox = newState;
   };
 }
 
