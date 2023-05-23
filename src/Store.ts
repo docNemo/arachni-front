@@ -96,7 +96,9 @@ class Store {
         creator: creator,
       }),
     })
-      .then((res: Response) => res.json())
+      .then((res: Response) =>
+        res.status === 200 ? res.json() : Promise.reject(res)
+      )
       .then((res: IArticle) => {
         if (this.articles.length === this.countArticlePage) {
           this.articles.pop();
@@ -106,6 +108,12 @@ class Store {
         this.setAddDlg();
         this.countArticles = this.countArticles + 1;
         this.countPage = Math.ceil(this.countArticles / this.countArticlePage);
+      })
+      .catch((res: Response) => {
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
       });
   };
 
@@ -116,7 +124,7 @@ class Store {
     fetch(
       `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
       { method: "DELETE" }
-    ).then((res) => {
+    ).then((res: Response) => {
       if (res.status === 200) {
         this.loadArticles(this.page);
         this.setDelDlg();

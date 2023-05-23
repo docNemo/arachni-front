@@ -14,7 +14,10 @@ interface IArticleProps {
 
 const Article = ({ article }: IArticleProps) => {
   const open = () => store.setEditor(article);
-  const delArticle = () => store.setDelDlg(article);
+  const delArticle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    store.setDelDlg(article);
+  };
   return (
     <Paper
       key={article.idArticle}
