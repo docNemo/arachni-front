@@ -30,6 +30,7 @@ const ArticleEditor = () => {
   const [updDlg, setUpdDlg] = useState<boolean>(false);
   const [resetDlg, setResetDlg] = useState<boolean>(false);
   const [closeDlg, setCloseDlg] = useState<boolean>(false);
+  const [updDisable, setUpdDisable] = useState<boolean>(true);
 
   const update = () => {
     const arrCategories = Array.from(
@@ -76,6 +77,7 @@ const ArticleEditor = () => {
         .map((str) => str.trim())
         .some((str) => str === "")
     );
+    setUpdDisable(!(title.trim() && text.trim()));
   });
 
   return (
@@ -94,7 +96,7 @@ const ArticleEditor = () => {
             </IconButton>
             <Button
               onClick={() => setUpdDlg(!updDlg)}
-              disabled={!(edit && change && !errCategories)}
+              disabled={!(edit && change && !errCategories && updDisable)}
               sx={{ color: "white" }}
             >
               Обновить
@@ -110,6 +112,7 @@ const ArticleEditor = () => {
             variant="standard"
             size="small"
             label="Название"
+            error={title.trim() === ""}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             InputProps={edit ? {} : readOnly}
@@ -134,6 +137,7 @@ const ArticleEditor = () => {
             size="small"
             rows={10}
             label="Текст статьи"
+            error={text.trim() === ""}
             value={text}
             onChange={(e) => setText(e.target.value)}
             InputProps={edit ? {} : readOnly}
