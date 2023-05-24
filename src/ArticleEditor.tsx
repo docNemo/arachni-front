@@ -36,10 +36,11 @@ const ArticleEditor = () => {
     const arrCategories = Array.from(
       new Set(categories.split("/").map((str) => str.trim()))
     );
-    store.onUpdArticle(title, arrCategories, text);
-    setCategories(arrCategories.join("/"));
-    setUpdDlg(false);
-    setChange(false);
+    store.onUpdArticle(title, arrCategories, text)?.then(() => {
+      setCategories(arrCategories.join("/"));
+      setUpdDlg(false);
+      setChange(false);
+    });
   };
   const close = () =>
     edit && change && !errCategories ? setCloseDlg(true) : store.setEditor();

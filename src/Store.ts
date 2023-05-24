@@ -110,7 +110,7 @@ class Store {
     categories: string,
     text: string,
     creator: string
-  ): void => {
+  ): Promise<boolean> =>
     fetch(`${window.location.origin}${this.url}`, {
       method: "POST",
       headers: {
@@ -139,14 +139,10 @@ class Store {
       })
       .catch(this.errorHandler)
       .then(this.setAddDlg);
-  };
 
-  onDelArticle = (): void => {
-    if (!this.selectArticle) {
-      return;
-    }
+  onDelArticle = (): Promise<void> =>
     fetch(
-      `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
+      `${window.location.origin}${this.url}/${this.selectArticle?.idArticle}`,
       { method: "DELETE" }
     )
       .then((res: Response) => {
@@ -162,18 +158,14 @@ class Store {
         Promise.reject(res);
       })
       .catch(this.errorHandler);
-  };
 
   onUpdArticle = (
     title: string,
     categories: Array<string>,
     text: string
-  ): void => {
-    if (!this.selectArticle) {
-      return;
-    }
+  ): Promise<void> =>
     fetch(
-      `${window.location.origin}${this.url}/${this.selectArticle.idArticle}`,
+      `${window.location.origin}${this.url}/${this.selectArticle?.idArticle}`,
       {
         method: "PUT",
         headers: {
@@ -199,7 +191,6 @@ class Store {
         this.setInfoBox(`Обновлена статья: ${res.title}`, "success");
       })
       .catch(this.errorHandler);
-  };
 
   setInfoBox = (text?: string, state?: State): void => {
     let newState: IInfoBox = {
