@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
+import moment from "moment";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import store from "./Store";
-import TextField from "@mui/material/TextField";
 
 const ArticleEditor = () => {
   const [title, setTitle] = useState<string>(
@@ -108,7 +109,7 @@ const ArticleEditor = () => {
             fullWidth
             variant="standard"
             size="small"
-            label={"Название"}
+            label="Название"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             InputProps={edit ? {} : readOnly}
@@ -117,7 +118,7 @@ const ArticleEditor = () => {
             fullWidth
             variant="standard"
             size="small"
-            label={"Категория"}
+            label="Категория"
             error={errCategories}
             helperText={
               errCategories
@@ -134,7 +135,7 @@ const ArticleEditor = () => {
             variant="standard"
             size="small"
             rows={10}
-            label={"Текст статьи"}
+            label="Текст статьи"
             value={text}
             onChange={(e) => setText(e.target.value)}
             InputProps={edit ? {} : readOnly}
@@ -144,8 +145,19 @@ const ArticleEditor = () => {
             fullWidth
             variant="standard"
             size="small"
-            label={"Автор"}
+            label="Автор"
             value={store.selectArticle?.creator}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            disabled
+            fullWidth
+            variant="standard"
+            size="small"
+            label="Дата создания"
+            value={moment(store.selectArticle?.creationDate).format('LLLL')}
             InputProps={{
               readOnly: true,
             }}
