@@ -32,11 +32,11 @@ const ArticleEditor = () => {
   const [closeDlg, setCloseDlg] = useState<boolean>(false);
 
   const update = () => {
-    store.onUpdArticle(
-      title,
-      categories.split("/").map((str) => str.trim()),
-      text
+    const arrCategories = Array.from(
+      new Set(categories.split("/").map((str) => str.trim()))
     );
+    store.onUpdArticle(title, arrCategories, text);
+    setCategories(arrCategories.join("/"));
     setUpdDlg(false);
     setChange(false);
   };
@@ -121,9 +121,7 @@ const ArticleEditor = () => {
             label="Категория"
             error={errCategories}
             helperText={
-              errCategories
-                ? "Категория должна быть в формате: кат1/кат2..."
-                : ""
+              edit ? "Категория должна быть в формате: кат1/кат2..." : ""
             }
             value={categories}
             onChange={(e) => setCategories(e.target.value)}
@@ -157,7 +155,7 @@ const ArticleEditor = () => {
             variant="standard"
             size="small"
             label="Дата создания"
-            value={moment(store.selectArticle?.creationDate).format('LLLL')}
+            value={moment(store.selectArticle?.creationDate).format("LLLL")}
             InputProps={{
               readOnly: true,
             }}
@@ -168,7 +166,8 @@ const ArticleEditor = () => {
         <DialogTitle>Обновление</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Вы точно хотите обновить статью?
+            Вы точно хотите обновить статью? (При сохранении дубликаты категорий
+            будут удалены!)
           </DialogContentText>
         </DialogContent>
         <DialogActions>
