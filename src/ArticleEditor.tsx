@@ -97,7 +97,7 @@ const ArticleEditor = () => {
             </IconButton>
             <Button
               onClick={() => setUpdDlg(!updDlg)}
-              disabled={!(edit && change && !errCategories && updDisable)}
+              disabled={!(edit && change && !errCategories && !updDisable)}
               sx={{ color: "white" }}
             >
               Обновить
