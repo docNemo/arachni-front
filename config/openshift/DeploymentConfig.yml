@@ -155,6 +155,11 @@ objects:
 
                 index index.html index.htm;
 
+                location /api {
+                    proxy_pass              http://arachni-back-develop.apps.os-lab-1.neo/api;
+                    proxy_redirect          off;
+                }
+
                 location / {
                     try_files $uri $uri/ /index.html;
                 }
