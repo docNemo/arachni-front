@@ -15,22 +15,11 @@ const ArticleAddDlg = () => {
   const [creator, setCreator] = useState<string>("");
   const [disableCreate, setDisableCreate] = useState<boolean>(true);
 
-  const clear = () => {
-    setTitle("");
-    setCategories("");
-    setText("");
-    setCreator("");
-  };
-
-  const create = () => {
-    store.onAddArticle(title, categories, text, creator);
-    clear();
-  };
-
-  const close = () => {
-    store.setAddDlg();
-    clear();
-  };
+  const create = () =>
+    store
+      .onAddArticle(title, categories, text, creator)
+      .then((res) => res && store.setAddDlg());
+  const close = () => store.setAddDlg();
 
   useEffect(() => {
     setDisableCreate(

@@ -132,13 +132,15 @@ class Store {
         }
         delete res.text;
         this.articles.unshift(res);
-        this.setAddDlg();
         this.countArticles = this.countArticles + 1;
         this.countPage = Math.ceil(this.countArticles / this.countArticlePage);
         this.setInfoBox(`Добавлена статья ${res.title}`, "success");
+        return true;
       })
-      .catch(this.errorHandler)
-      .then(this.setAddDlg);
+      .catch((err) => {
+        this.errorHandler(err);
+        return false;
+      });
 
   onDelArticle = (): Promise<void> =>
     fetch(

@@ -46,7 +46,7 @@ const ListPaper = () => {
           </Box>
         </Stack>
       </Stack>
-      <ArticleAddDlg />
+      {store.isOpenAddDlg && <ArticleAddDlg />}
       <ArticleDelDlg />
       {store.isOpenEditor && <ArticleEditor />}
       <InfoBox {...store.infoBox} />
