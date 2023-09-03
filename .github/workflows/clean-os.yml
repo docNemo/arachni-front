@@ -65,8 +65,7 @@ jobs:
               ((iteration++)) 
           done          
           oc project ${{ env.OS_PROJECT }}
-
-      - run: oc whoami
+          oc whoami
 
       - name: Delete
         run: |
