@@ -15,7 +15,7 @@ env:
   OS_PROJECT: "arachni"
   APP_TEMPLATE: "DeploymentConfig.yml"
   HOST_PORT: "8080"
-  OS_ROUTE: "apps.os-lab-1.neo"
+  OS_ROUTE: "apps.os-lab-3.neo"
 
 jobs:
   build-and-deploy:
