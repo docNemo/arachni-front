@@ -15,7 +15,7 @@ env:
   OS_PROJECT: "arachni"
   APP_TEMPLATE: "DeploymentConfig.yml"
   HOST_PORT: "8080"
-  OS_ROUTE: "apps.os-lab-1.neo"
+  OS_ROUTE: "apps.os-lab-3.neo"
 
 jobs:
   build-and-deploy:
@@ -100,7 +100,7 @@ jobs:
         run: |
           echo "dns=$(sudo zerotier-cli -j listnetworks | jq '.[].dns.servers[0]')" >> $GITHUB_ENV
 
-      - name: Add OS host to resolv.conf
+      - name: Add DNS to resolv.conf
         run: |
           sudo mv /etc/resolv.conf /etc/resolv1.conf
           cat /etc/resolv1.conf | sudo tee -a /etc/resolv.conf
@@ -127,8 +127,7 @@ jobs:
               ((iteration++)) 
           done          
           oc project ${{ env.OS_PROJECT }}
-
-      - run: oc whoami
+          oc whoami
 
       - name: Deploy to OS
         run: |
@@ -139,8 +138,25 @@ jobs:
           -p IMAGE_SHA=${{ steps.build-and-push.outputs.sha }} \
           -p OS_ROUTE=${{ env.OS_ROUTE }} | oc apply -f -
 
+      - name: Delete completed deploy pods
+        run: |
+          oc delete pod --field-selector=status.phase==Succeeded
+          oc delete pod --field-selector=status.phase==Failed
+
       - name: Logout from OpenShift
         run: oc logout
 
+      - name: Get Zerotier ip
+        run: |
+          echo "ip=$(sudo zerotier-cli -j listnetworks | jq '.[].assignedAddresses[0]' | sed 's/\/24//g' | tr -d \\\")" >> $GITHUB_ENV
+
       - name: Leave from Zerotier network
         run: sudo zerotier-cli leave ${{ secrets.ZEROTIER_NETWORK_ID }}
+
+      - name: Get Zerotier member by ip
+        run: |
+          echo "member_id=$( curl -X GET -H "Authorization: token ${{ secrets.ZEROTIER_TOKEN }}" https://api.zerotier.com/api/v1/network/${{ secrets.ZEROTIER_NETWORK_ID }}/member | jq 'select(.[].config.ipAssignments[0]=="${{ env.ip }}") | .[0].nodeId' | tr -d \\\")" >> $GITHUB_ENV
+
+      - name: Delete Zerotier member
+        run: |
+          curl -X DELETE -H "Authorization: token ${{ secrets.ZEROTIER_TOKEN }}" https://api.zerotier.com/api/v1/network/${{ secrets.ZEROTIER_NETWORK_ID }}/member/${{ env.member_id }}
