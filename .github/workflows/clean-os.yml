@@ -78,7 +78,9 @@ jobs:
       - name: Get Zerotier ip
         run: |
           echo "ip=$(sudo zerotier-cli -j listnetworks | jq '.[].assignedAddresses[0]' | sed 's/\/24//g' | tr -d \\\")" >> $GITHUB_ENV
-          sudo zerotier-cli leave ${{ secrets.ZEROTIER_NETWORK_ID }}
+
+      - name: Leave from Zerotier network
+        run: sudo zerotier-cli leave ${{ secrets.ZEROTIER_NETWORK_ID }}
 
       - name: Get Zerotier member by ip
         run: |
