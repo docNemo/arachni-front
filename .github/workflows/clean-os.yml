@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "dns=$(sudo zerotier-cli -j listnetworks | jq '.[].dns.servers[0]')" >> $GITHUB_ENV
 
-      - name: Add OS host to resolv.conf
+      - name: Add DNS to resolv.conf
         run: |
           sudo mv /etc/resolv.conf /etc/resolv1.conf
           cat /etc/resolv1.conf | sudo tee -a /etc/resolv.conf
