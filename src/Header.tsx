@@ -15,7 +15,7 @@ const Header = () => {
     <AppBar component={"nav"} sx={{ position: "relative" }}>
       <Toolbar>
         <Typography variant={"h5"} sx={{ flexGrow: 1 }}>
-          Курсовая работа
+          Arachni
         </Typography>
         <Box display={"flex"}>
           <Search />
