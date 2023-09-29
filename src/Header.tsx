@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import store from "./Store";
 import Search from "./Search";
 import Filter from "./Filter";
-import FilterButton from "FilterButton";
+import FilterButton from "./FilterButton";
 
 const Header = () => {
   return (

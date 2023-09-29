@@ -8,11 +8,12 @@
     "build": "parcel build src/index.html --no-cache"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^4.5.8",
-    "@mui/icons-material": "^5.11.16",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.11",
     "@mui/material": "^5.13.0",
+    "@mui/x-date-pickers": "^6.16.0",
     "mobx": "^6.9.0",
     "mobx-react-lite": "^3.4.3",
     "moment": "^2.29.4",

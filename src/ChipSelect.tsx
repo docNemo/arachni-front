@@ -30,33 +30,27 @@ const getStyles = (
       : theme.typography.fontWeightMedium,
 });
 
-interface IMultipleSelectChip {
-    label: string;
-    list: Array<string>;
+interface ISelectProps {
+  label: string;
+  list: Array<string>;
 }
 
-const MultipleSelectChip = ({label,list}:IMultipleSelectChip) => {
+const MultipleSelectChip = ({ label, list }: ISelectProps) => {
   const theme = useTheme();
-  const [values, setValues] = React.useState<string[]>([]);
+  const [values, setValues] = React.useState<string[]>(["Клуб Слизней", "Участники Битвы за Хогвартс"]);
 
   const handleChange = (event: SelectChangeEvent<typeof values>) => {
-    const {
-      target: { value },
-    } = event;
-    setValues(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    const { target: { value } } = event;
+    setValues(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
-    <FormControl sx={{ m: 1, width: 300 }}>
+    <FormControl variant="standard" size="small" sx={{ m: 1, width: 300 }}>
       <InputLabel>{label}</InputLabel>
       <Select
         multiple
         value={values}
         onChange={handleChange}
-        input={<OutlinedInput label={label} />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -80,4 +74,30 @@ const MultipleSelectChip = ({label,list}:IMultipleSelectChip) => {
   );
 };
 
-export default MultipleSelectChip;
+const LongSelect = ({ label, list }: ISelectProps) => {
+  const [value, setValue] = React.useState<string>("");
+  const handleChange = (event: SelectChangeEvent) => setValue(event.target.value);
+
+  return (
+    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} size="small">
+      <InputLabel>{label}</InputLabel>
+      <Select
+        value={value}
+        label={label}
+        onChange={handleChange}
+      >
+        <MenuItem value="" sx={{ display: "none" }} />
+        {list.map((el) => (
+          <MenuItem
+            key={el}
+            value={el}
+          >
+            {el}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+}
+
+export { MultipleSelectChip, LongSelect };
