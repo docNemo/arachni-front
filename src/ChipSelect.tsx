@@ -45,7 +45,7 @@ const MultipleSelectChip = ({ label, list }: ISelectProps) => {
   };
 
   return (
-    <FormControl variant="standard" size="small" sx={{ m: 1, width: 300 }}>
+    <FormControl variant="standard" size="small" sx={{ m: 1 }}>
       <InputLabel>{label}</InputLabel>
       <Select
         multiple

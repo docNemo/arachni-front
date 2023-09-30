@@ -1,19 +1,23 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import Stack from "@mui/material/Stack";
 import Header from "./Header";
-import ListPaper from "./ListPaper";
+import MainView from "./MainView";
+import InfoBox from "./InfoBox";
+import store from "./Store";
 
 const App = () => {
-  return (
+  return <>
     <Stack sx={{ height: "100vh" }}>
       <Header />
-      <ListPaper />
+      <MainView />
     </Stack>
-  );
+    <InfoBox {...store.infoBox} />
+  </>;
 };
 
-export default App;
+export default observer(App);

@@ -3,12 +3,11 @@ import { observer } from "mobx-react-lite";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
-import store from "./Store";
 import Article from "./Article";
 import ArticleEditor from "./ArticleEditor";
 import ArticleAddDlg from "./ArticleAddDlg";
 import ArticleDelDlg from "./ArticleDelDlg";
-import InfoBox from "./InfoBox";
+import store from "./Store";
 
 const ListPaper = () => {
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) =>
@@ -49,7 +48,6 @@ const ListPaper = () => {
       {store.isOpenAddDlg && <ArticleAddDlg />}
       <ArticleDelDlg />
       {store.isOpenEditor && <ArticleEditor />}
-      <InfoBox {...store.infoBox} />
     </>
   );
 };
