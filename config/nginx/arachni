@@ -1,0 +1,39 @@
+server {
+    gzip on;
+    gzip_types   text/plain application/xml application/x-javascript text/css;
+    listen       __LISTEN_PORT__;
+    server_name  __HOST_NAME__;
+    access_log /var/log/nginx/__HOST_NAME__-access.log;
+    error_log /var/log/nginx/__HOST_NAME__-error.log;
+    root         /app;
+
+    index index.html index.htm;
+
+    location /api {
+        proxy_pass              __BACK_HOST__;
+        proxy_redirect          off;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Mediz images, icons, video, adio, HTC
+    location ~* \*(?:jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc|otf)$ {
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+
+    # Javascript and CSS files
+    location ~* \*(?:css|js)$ {
+        try_files $uri =404;
+        expires 1y;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+    
+    location ~^.+\//+$ {
+        try_files $uri =404;
+    }
+}
