@@ -156,7 +156,7 @@ objects:
                 index index.html index.htm;
 
                 location /api {
-                    proxy_pass              http://arachni-back-develop.apps.os-lab-3.neo/api;
+                    proxy_pass              ${BACK_HOST};
                     proxy_redirect          off;
                 }
 
@@ -297,3 +297,6 @@ parameters:
   - name:   REQUESTS_MEMORY
     required: true
     value: '500Mi'
+  - name:   BACK_HOST
+    required: true
+    value: 'http://arachni-articles-develop.apps.os-lab-3.neo/api'

@@ -77,6 +77,7 @@ jobs:
           echo "ROUTE_TEMPLATE=Route.yml" >> $GITHUB_ENV
           echo "HOST_PORT=8080" >> $GITHUB_ENV
           echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back-dev.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
 
       - name: Set UAT env
         if: startsWith(env.BRANCH, 'release')
@@ -87,6 +88,7 @@ jobs:
           echo "APP_TEMPLATE=DeploymentConfig.yml" >> $GITHUB_ENV
           echo "HOST_PORT=8080" >> $GITHUB_ENV
           echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back-uat.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
 
       - name: Set Prod env
         if: env.BRANCH == 'master'
@@ -98,6 +100,7 @@ jobs:
           echo "ROUTE_TEMPLATE=Route.yml" >> $GITHUB_ENV
           echo "HOST_PORT=8080" >> $GITHUB_ENV
           echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
 
       - name: Image name to lowercase
         id: prepare-image-name
@@ -165,7 +168,8 @@ jobs:
           -p HOST_PORT=${{ env.HOST_PORT }} \
           -p IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME_WIHT_VERSION }} \
           -p IMAGE_SHA=${{ env.IMAGE_SHA }} \
-          -p OS_ROUTE=${{ env.OS_ROUTE }} | oc apply -f -
+          -p OS_ROUTE=${{ env.OS_ROUTE }} \
+          -p BACK_HOST=${{ env.BACK_HOST }} | oc apply -f -
 
       - name: Delete completed deploy pods
         run: |
