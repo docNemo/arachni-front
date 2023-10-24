@@ -209,14 +209,14 @@ jobs:
       - name: Prepare nginx site file
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
-          sed /__LISTEN_PORT__/${{ env.LISTEN_PORT }}/ ${{ NGINX_TEMPLATE }}
-          sed /__HOST_NAME__/${{ env.APP_HOST }}/ ${{ NGINX_TEMPLATE }}
-          sed /__BACK_HOST__/${{ env.BACK_HOST }}/ ${{ NGINX_TEMPLATE }}
+          sed /__LISTEN_PORT__/${{ env.LISTEN_PORT }}/ ${{ env.NGINX_TEMPLATE }}
+          sed /__HOST_NAME__/${{ env.APP_HOST }}/ ${{ env.NGINX_TEMPLATE }}
+          sed /__BACK_HOST__/${{ env.BACK_HOST }}/ ${{ env.NGINX_TEMPLATE }}
 
       - name: Deploy app to nginx
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
-          sshpass -p "${{ secrets.PASSWORD_OS }}" scp ${{ NGINX_TEMPLATE }} ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:${{ env.TARGET_FILEPATH }}
+          sshpass -p "${{ secrets.PASSWORD_OS }}" scp ${{ env.NGINX_TEMPLATE }} ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:${{ env.TARGET_FILEPATH }}
           sshpass -p "${{ secrets.PASSWORD_OS }}" scp -r dist ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:/app/
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}
           sudo nginx -t
