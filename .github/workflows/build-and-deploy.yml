@@ -216,9 +216,9 @@ jobs:
       - name: Deploy app to nginx
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
-          sshpass -p "${{ secret.PASSWORD_OS }}" scp NGINX_TEMPLATE ${{ secret.LOGIN_OS }}@${{ env.NGINX_HOST }}:${{ env.TARGET_FILEPATH }}
-          sshpass -p "${{ secret.PASSWORD_OS }}" scp -r dist ${{ secret.LOGIN_OS }}@${{ env.NGINX_HOST }}:/app/
-          sshpass -p "${{ secret.PASSWORD_OS }}" ssh ${{ secret.LOGIN_OS }}@${{ env.NGINX_HOST }}
+          sshpass -p "${{ secrets.PASSWORD_OS }}" scp NGINX_TEMPLATE ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:${{ env.TARGET_FILEPATH }}
+          sshpass -p "${{ secrets.PASSWORD_OS }}" scp -r dist ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:/app/
+          sshpass -p "${{ secrets.PASSWORD_OS }}" ssh ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}
           sudo nginx -t
           sudo systemctl reload nginx
           exit
