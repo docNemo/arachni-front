@@ -125,18 +125,22 @@ jobs:
           echo "BACK_HOST=http://arachni-back.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
 
       - name: Image name to lowercase
+        if: env.CD_MODE == 'dev'
         id: prepare-image-name
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ env.IMAGE_NAME_WIHT_VERSION }}
 
       - name: Prepare image name
+        if: env.CD_MODE == 'dev'
         run: echo "IMAGE_NAME_WIHT_VERSION=${{ steps.prepare-image-name.outputs.lowercase }}" >> $GITHUB_ENV
 
       - name: Log into registry ${{ env.REGISTRY }}
+        if: env.CD_MODE == 'dev'
         run: docker login ${{ env.REGISTRY }} --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+        if: env.CD_MODE == 'dev'
         id: build-and-push
         run: |
           docker build --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_WIHT_VERSION }} . -f ${{ env.DOCKERFILE }}
@@ -209,9 +213,9 @@ jobs:
       - name: Prepare nginx site file
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
-          sed -e s/__LISTEN_PORT__/${{ env.LISTEN_PORT }}/ ${{ env.NGINX_TEMPLATE }}
-          sed -e s/__HOST_NAME__/${{ env.APP_HOST }}/ ${{ env.NGINX_TEMPLATE }}
-          sed -e s/__BACK_HOST__/${{ env.BACK_HOST }}/ ${{ env.NGINX_TEMPLATE }}
+          sed -e s/__LISTEN_PORT__/${{ env.LISTEN_PORT }}/g ${{ env.NGINX_TEMPLATE }}
+          sed -e s/__HOST_NAME__/${{ env.APP_HOST }}/g ${{ env.NGINX_TEMPLATE }}
+          sed -e s/__BACK_HOST__/${{ env.BACK_HOST }}/g ${{ env.NGINX_TEMPLATE }}
 
       - name: Deploy app to nginx
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
