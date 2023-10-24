@@ -209,9 +209,9 @@ jobs:
       - name: Prepare nginx site file
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
-          sed /__LISTEN_PORT__/${{ env.LISTEN_PORT }}/ ${{ env.NGINX_TEMPLATE }}
-          sed /__HOST_NAME__/${{ env.APP_HOST }}/ ${{ env.NGINX_TEMPLATE }}
-          sed /__BACK_HOST__/${{ env.BACK_HOST }}/ ${{ env.NGINX_TEMPLATE }}
+          sed s/__LISTEN_PORT__/${{ env.LISTEN_PORT }}/ ${{ env.NGINX_TEMPLATE }}
+          sed s/__HOST_NAME__/${{ env.APP_HOST }}/ ${{ env.NGINX_TEMPLATE }}
+          sed s/__BACK_HOST__/${{ env.BACK_HOST }}/ ${{ env.NGINX_TEMPLATE }}
 
       - name: Deploy app to nginx
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
