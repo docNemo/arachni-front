@@ -81,38 +81,15 @@ jobs:
           echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
           echo "BACK_HOST=http://arachni-back-dev.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
 
-#      - name: Set UAT env
-#        if: startsWith(env.BRANCH, 'release')
-#        run: |
-#          echo "CD_MODE=uat" >> $GITHUB_ENV
-#          echo "APPLICATION_NAME=${{ env.BASE_APPLICATION_NAME }}-uat" >> $GITHUB_ENV
-#          echo "OS_PROJECT=arachni-front-uat" >> $GITHUB_ENV
-#          echo "APP_TEMPLATE=DeploymentConfig.yml" >> $GITHUB_ENV
-#          echo "HOST_PORT=8080" >> $GITHUB_ENV
-#          echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
-#          echo "BACK_HOST=http://arachni-back-uat.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
-
       - name: Set UAT env
-#        if: startsWith(env.BRANCH, 'release')
+        if: startsWith(env.BRANCH, 'release')
         run: |
           echo "CD_MODE=uat" >> $GITHUB_ENV
           echo "LISTEN_PORT=80" >> $GITHUB_ENV
           echo "APP_HOST=arachni-uat.neo" >> $GITHUB_ENV
           echo "NGINX_HOST=nginx-lab-1.neo" >> $GITHUB_ENV
           echo "TARGET_FILEPATH=${{ env.NGINX_SITES_DIR }}/arachni-uat" >> $GITHUB_ENV
-#          echo "BACK_HOST=http://arachni-back-uat.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
-
-#      - name: Set Prod env
-#        if: env.BRANCH == 'master'
-#        run: |
-#          echo "CD_MODE=prod" >> $GITHUB_ENV
-#          echo "APPLICATION_NAME=${{ env.BASE_APPLICATION_NAME }}" >> $GITHUB_ENV
-#          echo "OS_PROJECT=arachni-front" >> $GITHUB_ENV
-#          echo "APP_TEMPLATE=DeploymentConfig.yml" >> $GITHUB_ENV
-#          echo "ROUTE_TEMPLATE=Route.yml" >> $GITHUB_ENV
-#          echo "HOST_PORT=8080" >> $GITHUB_ENV
-#          echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
-#          echo "BACK_HOST=http://arachni-back.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back-uat.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
 
       - name: Set Prod env
         if: env.BRANCH == 'master'
@@ -211,24 +188,24 @@ jobs:
         run: oc logout
 
       - name: Prepare nginx site file
-#        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
+        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
           sed -i 's#__LISTEN_PORT__#${{ env.LISTEN_PORT }}#g' ${{ env.NGINX_TEMPLATE }}
           sed -i 's#__HOST_NAME__#${{ env.APP_HOST }}#g' ${{ env.NGINX_TEMPLATE }}
           sed -i 's#__BACK_HOST__#${{ env.BACK_HOST }}#g' ${{ env.NGINX_TEMPLATE }}
 
       - name: Deploy config to nginx
-#        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
+        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" scp -o StrictHostKeyChecking=no ${{ env.NGINX_TEMPLATE }} ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:${{ env.TARGET_FILEPATH }}
 
       - name: Deploy app to nginx
-#        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
+        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" scp -o StrictHostKeyChecking=no -r dist/* ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:/app
 
       - name: Reload nginx
-#        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
+        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }} sudo nginx -t
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }} sudo systemctl start nginx
