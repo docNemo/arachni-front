@@ -232,9 +232,7 @@ jobs:
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}
           sudo nginx -t
-          if ! sudo systemctl reload nginx  ; then 
-            sudo systemctl start nginx ;
-          fi
+          sudo systemctl reload nginx && echo "Success reload" || sudo systemctl start nginx
           exit
 
       - name: Get Zerotier ip
