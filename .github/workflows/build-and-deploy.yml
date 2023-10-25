@@ -232,6 +232,7 @@ jobs:
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}
           sudo nginx -t
+          sudo systemctl status nginx
           sudo systemctl reload nginx && echo "Success reload" || sudo systemctl start nginx
           exit
 
