@@ -230,11 +230,10 @@ jobs:
       - name: Reload nginx
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
-          sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}
-          sudo nginx -t
-          sudo systemctl status nginx
-          sudo systemctl reload nginx && echo "Success reload" || sudo systemctl start nginx
-          exit
+          sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }} < echo "sudo nginx -t \
+          sudo systemctl status nginx \
+          sudo systemctl reload nginx && echo "Success reload" || sudo systemctl start nginx \
+          exit"
 
       - name: Get Zerotier ip
         run: |
