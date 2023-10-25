@@ -231,7 +231,7 @@ jobs:
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }} sudo nginx -t
-          sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }} sudo systemctl reload nginx | grep "is not active" || sudo systemctl start nginx
+          sshpass -p "${{ secrets.PASSWORD_OS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }} if sudo systemctl reload nginx | grep "is not active"; then sudo systemctl start nginx; fi
 
       - name: Get Zerotier ip
         run: |
