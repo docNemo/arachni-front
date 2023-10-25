@@ -217,11 +217,19 @@ jobs:
           sed 's#__HOST_NAME__#${{ env.APP_HOST }}#g' ${{ env.NGINX_TEMPLATE }}
           sed 's#__BACK_HOST__#${{ env.BACK_HOST }}#g' ${{ env.NGINX_TEMPLATE }}
 
-      - name: Deploy app to nginx
+      - name: Deploy config to nginx
 #        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
         run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" scp ${{ env.NGINX_TEMPLATE }} ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:${{ env.TARGET_FILEPATH }}
+
+      - name: Deploy app to nginx
+#        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
+        run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" scp -r dist ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}:/app/
+
+      - name: Reload nginx
+#        if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'
+        run: |
           sshpass -p "${{ secrets.PASSWORD_OS }}" ssh ${{ secrets.LOGIN_OS }}@${{ env.NGINX_HOST }}
           sudo nginx -t
           sudo systemctl reload nginx
