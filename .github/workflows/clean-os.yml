@@ -70,7 +70,7 @@ jobs:
 
       - name: Delete
         run: |
-          oc delete all -l app=${{ env.APPLICATION_NAME }}-${{ steps.meta.outputs.version }}
+          oc delete all,configmap -l app=${{ env.APPLICATION_NAME }}-${{ steps.meta.outputs.version }}
 
       - name: Logout from OpenShift
         run: oc logout
