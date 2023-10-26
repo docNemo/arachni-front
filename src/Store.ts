@@ -11,7 +11,7 @@ export interface IArticle {
 }
 
 interface IArticleListResponse {
-  articles: Array<IArticle>;
+  data: Array<IArticle>;
   count: number;
 }
 
@@ -67,7 +67,7 @@ class Store {
         res.status === 200 ? res.json() : Promise.reject(res)
       )
       .then((res: IArticleListResponse) => {
-        this.articles = res.articles;
+        this.articles = res.data;
         this.countPage = Math.ceil(res.count / this.countArticlePage);
       })
       .catch(this.errorHandler);
