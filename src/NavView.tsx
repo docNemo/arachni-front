@@ -1,9 +1,12 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
 import Search from "./Search";
 import Sort from "./Sort";
 import Filter from "./Filter";
+import store from "./Store";
 
 interface IPaperBoxProps {
     component: JSX.Element;
@@ -28,8 +31,9 @@ const NavView = () => {
             <PaperBox component={<Search />} />
             <PaperBox component={<Sort />} />
             <PaperBox component={<Filter />} />
+            <Button onClick={store.loadArticles} variant="contained" sx={{margin: "8px"}}>Найти</Button>
         </Stack>
     )
 }
 
-export default NavView;
+export default observer(NavView);

@@ -1,41 +1,38 @@
-import React, { useState } from 'react';
-import moment from 'moment';
+import React from 'react';
+import { observer } from "mobx-react-lite";
+import moment, { Moment } from 'moment';
 import 'moment/locale/de';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import FormControl from '@mui/material/FormControl';
+import store from "./Store";
 
 const DatePickers = () => {
-    const [begin, setBegin] = useState<string | null>(null);
-    const [end, setEnd] = useState<string | null>(null);
+    const newStart = (newValue: Moment | null) => store.filter.beginDate = newValue?.toString();
+    const newEnd = (newValue: Moment | null) => store.filter.endDate = newValue?.toString();
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="de">
+        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="ru">
             <Stack>
-                {/* <DesktopDatePicker
-                    label="Начальная дата"
-                    value={begin}
-                    onChange={(newValue) => {
-                        setBegin(newValue);
-                    }}
-                /> */}
-                {/* <DesktopDatePicker
-                    label="Конечная дата"
-                    value={end}
-                    onChange={(newValue) => {
-                        setEnd(newValue);
-                    }}
-                /> */}
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} size="small">
-                    <DateField variant="standard" label="Начальная дата" defaultValue={moment('2022-04-17')} />
-                    <DateField variant="standard" label="Конечная дата" defaultValue={moment('2022-05-17')} />
+                    <DateField
+                        variant="standard"
+                        label="Начальная дата"
+                        value={store.filter.beginDate ? moment(store.filter.beginDate) : undefined}
+                        onChange={newStart}
+                    />
+                    <DateField
+                        variant="standard"
+                        label="Конечная дата"
+                        value={store.filter.endDate ? moment(store.filter.endDate) : undefined}
+                        onChange={newEnd}
+                    />
                 </FormControl>
             </Stack>
         </LocalizationProvider>
     );
 }
 
-export default DatePickers;
+export default observer(DatePickers);

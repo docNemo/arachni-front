@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Theme, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -33,15 +32,16 @@ const getStyles = (
 interface ISelectProps {
   label: string;
   list: Array<string>;
+  value: Array<string>;
+  setValue: (newValue: Array<string>) => void;
 }
 
-const MultipleSelectChip = ({ label, list }: ISelectProps) => {
+const MultipleSelectChip = ({ label, list, value, setValue }: ISelectProps) => {
   const theme = useTheme();
-  const [values, setValues] = React.useState<string[]>(["Клуб Слизней", "Участники Битвы за Хогвартс"]);
 
-  const handleChange = (event: SelectChangeEvent<typeof values>) => {
+  const handleChange = (event: SelectChangeEvent<typeof value>) => {
     const { target: { value } } = event;
-    setValues(typeof value === "string" ? value.split(",") : value);
+    setValue(typeof value === "string" ? value.split(",") : value);
   };
 
   return (
@@ -49,7 +49,7 @@ const MultipleSelectChip = ({ label, list }: ISelectProps) => {
       <InputLabel>{label}</InputLabel>
       <Select
         multiple
-        value={values}
+        value={value}
         onChange={handleChange}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -64,7 +64,7 @@ const MultipleSelectChip = ({ label, list }: ISelectProps) => {
           <MenuItem
             key={el}
             value={el}
-            style={getStyles(el, values, theme)}
+            style={getStyles(el, value, theme)}
           >
             {el}
           </MenuItem>
@@ -74,15 +74,14 @@ const MultipleSelectChip = ({ label, list }: ISelectProps) => {
   );
 };
 
-const LongSelect = ({ label, list }: ISelectProps) => {
-  const [value, setValue] = React.useState<string>("");
-  const handleChange = (event: SelectChangeEvent) => setValue(event.target.value);
+const LongSelect = ({ label, list, value, setValue }: ISelectProps) => {
+  const handleChange = (event: SelectChangeEvent) => setValue([event.target.value]);
 
   return (
     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }} size="small">
       <InputLabel>{label}</InputLabel>
       <Select
-        value={value}
+        value={value[0]}
         label={label}
         onChange={handleChange}
       >

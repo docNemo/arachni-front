@@ -3,14 +3,25 @@ import { observer } from "mobx-react-lite";
 import Stack from "@mui/material/Stack";
 import DataPickers from "./DataPickers";
 import { MultipleSelectChip, LongSelect } from "./ChipSelect";
+import store from "./Store";
 
 const Filter = () => {
   return (
-        <Stack>
-          <DataPickers />
-          <LongSelect label="Автор" list={["Ниф-Ниф", "Наф-Наф", "Нуф-Нуф", "Ленин", "Жириновский", "Берия", "Троцкий", "Хрущев"]} />
-          <MultipleSelectChip label="Категории" list={["Клуб Слизней", "Участники Битвы за Хогвартс", "Деканы Хогвартса", "Пожиратели смерти", "Убитые Волан-де-Мортом", "Зельевары", "Участники встречи в Поместье Малфоев", "Защитники философского камня", "Преподаватели Хогвартса"]} />
-        </Stack>
+    <Stack>
+      <DataPickers />
+      <LongSelect
+        label="Автор"
+        list={[]}
+        value={[store.filter.creator ?? ""]}
+        setValue={(newValue) => store.filter.creator = newValue[0]}
+      />
+      <MultipleSelectChip
+        label="Категории"
+        list={[]}
+        value={store.filter.categories}
+        setValue={(newValue) => store.filter.categories = newValue}
+      />
+    </Stack>
   );
 };
 

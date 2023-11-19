@@ -27,6 +27,13 @@ export enum SortBy {
   CREATOR = "Автор",
 }
 
+interface IFilter {
+  beginDate?: string;
+  endDate?: string;
+  creator?: string;
+  categories: Array<string>;
+}
+
 class Store {
   private readonly countArticlePage: number = 25;
   private readonly url: string = "/api/article";
@@ -50,6 +57,7 @@ class Store {
   orderBy: "ASC" | "DESC" = "DESC";
   modeView: "LIST" | "ARTICLE" = "LIST";
   modeArticle?: "ADD" | "EDIT";
+  filter: IFilter = { categories: [] }
 
   constructor() {
     makeAutoObservable(this);
