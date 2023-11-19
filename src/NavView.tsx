@@ -1,6 +1,7 @@
 import React from "react";
 import Stack from "@mui/material/Stack";
-import Paper from "@mui/material/Paper"
+import Paper from "@mui/material/Paper";
+import Search from "./Search";
 import Sort from "./Sort";
 import Filter from "./Filter";
 
@@ -24,6 +25,7 @@ const PaperBox = ({ component }: IPaperBoxProps) => (
 const NavView = () => {
     return (
         <Stack sx={{ flexGrow: 1, overflowY: "hidden", paddingTop: "8px" }}>
+            <PaperBox component={<Search />} />
             <PaperBox component={<Sort />} />
             <PaperBox component={<Filter />} />
         </Stack>

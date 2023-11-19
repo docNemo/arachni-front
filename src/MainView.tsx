@@ -6,7 +6,7 @@ import NavView from "./NavView";
 
 const MainView = () => {
     return (
-        <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center" }}>
+        <Box sx={{ display: "flex", flexGrow: 1, justifyContent: "center", overflowY: "hidden" }}>
             <Box sx={{ display: "flex" }}>
                 <NavView />
                 <ListPaper />

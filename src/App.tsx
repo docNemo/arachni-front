@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Header from "./Header";
 import MainView from "./MainView";
 import InfoBox from "./InfoBox";
+import Progress from "./Progress";
 import store from "./Store";
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
       <MainView />
     </Stack>
     <InfoBox {...store.infoBox} />
+    <Progress {...store.progress} />
   </>;
 };
 

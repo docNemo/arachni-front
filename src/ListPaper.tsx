@@ -17,8 +17,8 @@ const ListPaper = () => {
 
   return (
     <>
-      <Stack sx={{ flexGrow: 1, overflowY: "hidden" }}>
-        <Typography variant="h6" sx={{ margin: "8px" }}>
+      <Stack sx={{ flexGrow: 1, overflowY: "hidden", width: "640px" }}>
+        <Typography variant="h6" sx={{ margin: "8px 24px" }}>
           {`Найдено ${store.countArticles} статей`}
         </Typography>
         <Divider />

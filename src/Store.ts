@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { State, IInfoBox } from "./InfoBox";
+import { IProgress } from "./Progress";
 
 export interface IArticle {
   idArticle: string;
@@ -43,6 +44,10 @@ class Store {
     text: "",
     close: () => this.setInfoBox(),
   };
+  progress: IProgress = {
+    open: false,
+    text: undefined,
+  }
   sortBy: string = "DATE";
   orderBy: "ASC" | "DESC" = "DESC";
 
@@ -52,6 +57,7 @@ class Store {
   }
 
   loadArticles = (): void => {
+    this.setProgress(true, "Загрузка");
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
@@ -68,7 +74,9 @@ class Store {
       )
       .then((res: IArticleListResponse) => {
         this.articles = res.data;
+        this.countArticles = res.count;
         this.countPage = Math.ceil(res.count / this.countArticlePage);
+        this.setProgress();
       })
       .catch(this.errorHandler);
   };
@@ -195,7 +203,7 @@ class Store {
       .catch(this.errorHandler);
 
   setInfoBox = (text?: string, state?: State): void => {
-    let newState: IInfoBox = {
+    const newState: IInfoBox = {
       open: text !== undefined,
       text: text ?? "",
       close: this.infoBox.close,
@@ -203,6 +211,8 @@ class Store {
     state && (newState.state = state);
     this.infoBox = newState;
   };
+
+  setProgress = (open: boolean = false, text?: string): IProgress => (this.progress = { open, text })
 
   errorHandler = (err: Response) =>
     err
