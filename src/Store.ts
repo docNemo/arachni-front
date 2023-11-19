@@ -36,9 +36,7 @@ class Store {
   page: number = 1;
   selectArticle?: IArticle;
   searchText: string = "";
-  isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
-  isOpenEditor: boolean = false;
   infoBox: IInfoBox = {
     open: false,
     text: "",
@@ -50,6 +48,8 @@ class Store {
   }
   sortBy: string = "DATE";
   orderBy: "ASC" | "DESC" = "DESC";
+  modeView: "LIST" | "ARTICLE" = "LIST";
+  modeArticle?: "ADD" | "EDIT";
 
   constructor() {
     makeAutoObservable(this);
@@ -88,7 +88,10 @@ class Store {
     this.loadArticles();
   };
 
-  setAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
+  setAddDlg = (): void => {
+    this.modeView = "ARTICLE";
+    this.modeArticle = "ADD";
+  };
 
   setDelDlg = (article?: IArticle): void => {
     this.selectArticle = article;
@@ -97,7 +100,8 @@ class Store {
 
   setEditor = (article?: IArticle): void => {
     if (!article) {
-      this.isOpenEditor = !this.isOpenEditor;
+      this.modeView = "LIST";
+      this.modeArticle = undefined;
       return;
     }
     fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
@@ -108,7 +112,8 @@ class Store {
       )
       .then((res: IArticle) => {
         this.selectArticle = res;
-        this.isOpenEditor = !this.isOpenEditor;
+        this.modeView = "ARTICLE";
+        this.modeArticle = "EDIT";
       })
       .catch(this.errorHandler);
   };

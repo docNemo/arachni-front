@@ -7,15 +7,22 @@ import "@fontsource/roboto/700.css";
 import Stack from "@mui/material/Stack";
 import Header from "./Header";
 import MainView from "./MainView";
+import ArticleView from "./ArticleView";
 import InfoBox from "./InfoBox";
 import Progress from "./Progress";
 import store from "./Store";
 
+const ViewEnum = {
+  "LIST": <MainView />,
+  "ARTICLE": <ArticleView />,
+}
+
 const App = () => {
+
   return <>
     <Stack sx={{ height: "100vh" }}>
       <Header />
-      <MainView />
+      {ViewEnum[store.modeView]}
     </Stack>
     <InfoBox {...store.infoBox} />
     <Progress {...store.progress} />

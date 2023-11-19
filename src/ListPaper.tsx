@@ -5,8 +5,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import Article from "./Article";
-import ArticleEditor from "./ArticleEditor";
-import ArticleAddDlg from "./ArticleAddDlg";
 import ArticleDelDlg from "./ArticleDelDlg";
 import store from "./Store";
 import { Divider } from "@mui/material";
@@ -51,9 +49,7 @@ const ListPaper = () => {
           </Box>
         </Stack>
       </Stack>
-      {store.isOpenAddDlg && <ArticleAddDlg />}
       <ArticleDelDlg />
-      {store.isOpenEditor && <ArticleEditor />}
     </>
   );
 };
