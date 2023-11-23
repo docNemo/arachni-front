@@ -75,7 +75,7 @@ class Store {
     url.searchParams.append("limit", this.countArticlePage.toString());
     url.searchParams.append("order", this.orderBy);
     url.searchParams.append("sortBy", this.sortBy);
-    if (this.filter.creator){
+    if (this.filter.creator && this.filter.creator != 'Любой'){
       url.searchParams.append("creator", this.filter.creator);
     }
     if (this.filter.categories != undefined && this.filter.categories.length > 0){
