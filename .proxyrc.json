@@ -1,5 +1,5 @@
 {
     "/api": {
-        "target": "http://arachni-back-devslaves-968584.apps.os-lab-3.neo"
+        "target": "http://arachni-back-dev.apps.os-lab-3.neo"
     }
 }

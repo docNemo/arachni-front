@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import DataPickers from "./DataPickers";
 import { MultipleSelectChip, LongSelect } from "./ChipSelect";
 import store from "./Store";
+import filterStore from "./FilterStore";
 
 const Filter = () => {
   return (
@@ -11,13 +12,13 @@ const Filter = () => {
       <DataPickers />
       <LongSelect
         label="Автор"
-        list={[]}
+        list={filterStore.creators}
         value={[store.filter.creator ?? ""]}
         setValue={(newValue) => store.filter.creator = newValue[0]}
       />
       <MultipleSelectChip
         label="Категории"
-        list={[]}
+        list={filterStore.categories}
         value={store.filter.categories}
         setValue={(newValue) => store.filter.categories = newValue}
       />

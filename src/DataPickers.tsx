@@ -10,8 +10,8 @@ import FormControl from '@mui/material/FormControl';
 import store from "./Store";
 
 const DatePickers = () => {
-    const newStart = (newValue: Moment | null) => store.filter.beginDate = newValue?.toString();
-    const newEnd = (newValue: Moment | null) => store.filter.endDate = newValue?.toString();
+    const newStart = (newValue: Moment | null) => store.filter.beginDate = newValue?.format("YYYY-MM-DD");
+    const newEnd = (newValue: Moment | null) => store.filter.endDate = newValue?.format("YYYY-MM-DD");
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="ru">

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { State, IInfoBox } from "./InfoBox";
 import { IProgress } from "./Progress";
+import filter from "./Filter";
 
 export interface IArticle {
   idArticle: string;
@@ -36,7 +37,7 @@ interface IFilter {
 
 class Store {
   private readonly countArticlePage: number = 25;
-  private readonly url: string = "/api/article";
+  private readonly url: string = "/api/arachni-articles/article";
   articles: Array<IArticle> = [];
   countArticles: number = 0;
   countPage: number = 1;
@@ -74,6 +75,18 @@ class Store {
     url.searchParams.append("limit", this.countArticlePage.toString());
     url.searchParams.append("order", this.orderBy);
     url.searchParams.append("sortBy", this.sortBy);
+    if (this.filter.creator){
+      url.searchParams.append("creator", this.filter.creator);
+    }
+    if (this.filter.categories != undefined && this.filter.categories.length > 0){
+      url.searchParams.append("categories", this.filter.categories.toString());
+    }
+    if (this.filter.beginDate != undefined){
+      url.searchParams.append("startDate", this.filter.beginDate);
+    }
+    if (this.filter.endDate){
+      url.searchParams.append("finishDate", this.filter.endDate);
+    }
     this.searchText.trim() &&
       url.searchParams.append("searchString", this.searchText.trim());
     fetch(url, { method: "GET" })
