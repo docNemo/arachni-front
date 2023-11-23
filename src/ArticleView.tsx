@@ -51,7 +51,7 @@ const ArticleView = () => {
             .onClassifyArticle(text)
             .then(
                 res => setCategories(
-                    (typeof res === "string" ? res : "").concat(categories.length == 0 ? '/'.concat(categories) : "")
+                    (typeof res === "string" ? res : "").concat(categories.length > 0 ? '/'.concat(categories) : "")
                 )
             );
         return;
@@ -189,12 +189,10 @@ const ArticleView = () => {
                             }}
                         />}
                     </Stack>
-                    <Box sx={{display: "flex", flexGrow: 1}}>
+                    <Box sx={{display: "flex", flexDirection: "row-reverse"}}>
                         <Button onClick={onClickClassifier}>
                             Определить категорию
                         </Button>
-                    </Box>
-                    <Box sx={{display: "flex", flexDirection: "row-reverse"}}>
                         <Button onClick={onClick} disabled={disableButton}>
                             {mode === "ADD" ? "Создать" : "Сохранить"}
                         </Button>
