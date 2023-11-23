@@ -211,11 +211,11 @@ const ArticleView = () => {
                 <DialogTitle>Классификация</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Такая категория ("{doubleClassifiedCategory}") уже записана
+                        Такая категория ("{doubleClassifiedCategory}") уже добавлена
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setUpdDlg(!doubleClassifiedCategoryDlg)}>Понятно</Button>
+                    <Button onClick={() => setDoubleClassifiedCategoryDlg(false)}>Понятно</Button>
                 </DialogActions>
             </Dialog>
             <Dialog open={updDlg}>
