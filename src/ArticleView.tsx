@@ -197,7 +197,7 @@ const ArticleView = () => {
                             }}
                         />}
                     </Stack>
-                    <Box sx={{display: "flex", flexDirection: "row-reverse"}}>
+                    <Box sx={{display: "flex", flexDirection: "row-reverse"}} justifyContent="space-between" alignItems="center">
                         <Button onClick={onClickClassifier}>
                             Определить категорию
                         </Button>
