@@ -35,6 +35,9 @@ const ArticleView = () => {
     const [edit, setEdit] = useState<boolean>(false);
     const [change, setChange] = useState<boolean>(false);
 
+    const [doubleClassifiedCategoryDlg, setDoubleClassifiedCategoryDlg] = useState<boolean>(false)
+    const [doubleClassifiedCategory, setDoubleClassifiedCategory] = useState<string>("false")
+
     const onClick = () => {
         if (mode === "ADD") {
             store
@@ -52,7 +55,10 @@ const ArticleView = () => {
             .then(res => typeof res === "string" ? res : "")
             .then(res => {
                     if (!categories.includes(res)) {
-                        res.concat(categories.length > 0 ? '/'.concat(categories) : "")
+                        setCategories(res.concat(categories.length > 0 ? '/'.concat(categories) : ""))
+                    } else {
+                        setDoubleClassifiedCategoryDlg(true)
+                        setDoubleClassifiedCategory(res)
                     }
                 }
             );
@@ -201,6 +207,17 @@ const ArticleView = () => {
                     </Box>
                 </Stack>
             </Box>
+            <Dialog open={doubleClassifiedCategoryDlg}>
+                <DialogTitle>Классификация</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Такая категория ("{doubleClassifiedCategory}") уже записана
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setUpdDlg(!doubleClassifiedCategoryDlg)}>Понятно</Button>
+                </DialogActions>
+            </Dialog>
             <Dialog open={updDlg}>
                 <DialogTitle>Обновление</DialogTitle>
                 <DialogContent>
