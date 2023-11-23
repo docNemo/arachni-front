@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { observer } from "mobx-react-lite";
+import React, {useState, useEffect} from "react";
+import {observer} from "mobx-react-lite";
 import moment from "moment";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -19,7 +19,7 @@ import store from "./Store";
 const ArticleView = () => {
     const mode = store.modeArticle;
 
-    const readOnly = { readOnly: true };
+    const readOnly = {readOnly: true};
 
     const [title, setTitle] = useState<string>("");
     const [categories, setCategories] = useState<string>("");
@@ -47,15 +47,11 @@ const ArticleView = () => {
     }
 
     const onClickClassifier = () => {
-        if (mode === "ADD") {
-            store
-                .onClassifyArticle(text)
-                .then(res => (typeof res === "string" ? res.concat('/') : "").concat(categories))
-                .then((res) => res && close());
-            return;
-        }
-
-        setUpdDlg(true);
+        store
+            .onClassifyArticle(text)
+            .then(res => (typeof res === "string" ? res.concat('/') : "").concat(categories))
+            .then((res) => res && close());
+        return;
     }
 
     const close = () => store.setEditor();
@@ -115,23 +111,23 @@ const ArticleView = () => {
 
     return (
         <>
-            <Box sx={{ display: "flex", flexGrow: 1, justifyContent: 'center', padding: "8px" }}>
-                <Stack sx={{ width: "800px", justifyContent: "center" }}>
-                    <Box sx={{ display: "flex" }}>
+            <Box sx={{display: "flex", flexGrow: 1, justifyContent: 'center', padding: "8px"}}>
+                <Stack sx={{width: "800px", justifyContent: "center"}}>
+                    <Box sx={{display: "flex"}}>
                         {mode === "ADD"
                             ? <Typography variant="h6" fontWeight={"bold"} flexGrow={1}>
                                 Создание
                             </Typography>
                             : <Box flexGrow={1}>
                                 <IconButton
-                                    sx={{ color: "rgba(0, 0, 0, 0.54)", opacity: edit ? 1 : 0.5 }}
+                                    sx={{color: "rgba(0, 0, 0, 0.54)", opacity: edit ? 1 : 0.5}}
                                     onClick={onEditMod}
                                 >
-                                    <EditIcon />
+                                    <EditIcon/>
                                 </IconButton>
                             </Box>}
                         <IconButton onClick={close}>
-                            <CloseIcon />
+                            <CloseIcon/>
                         </IconButton>
                     </Box>
                     <Stack>
@@ -190,12 +186,12 @@ const ArticleView = () => {
                             }}
                         />}
                     </Stack>
-                    <Box sx={{ display: "flex", flexGrow: 1 }}>
+                    <Box sx={{display: "flex", flexGrow: 1}}>
                         <Button onClick={onClickClassifier}>
                             Определить категорию
                         </Button>
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+                    <Box sx={{display: "flex", flexDirection: "row-reverse"}}>
                         <Button onClick={onClick} disabled={disableButton}>
                             {mode === "ADD" ? "Создать" : "Сохранить"}
                         </Button>
