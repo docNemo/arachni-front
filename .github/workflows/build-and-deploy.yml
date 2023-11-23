@@ -79,7 +79,7 @@ jobs:
           echo "ROUTE_TEMPLATE=Route.yml" >> $GITHUB_ENV
           echo "HOST_PORT=8080" >> $GITHUB_ENV
           echo "OS_ROUTE=apps.os-lab-3.neo" >> $GITHUB_ENV
-          echo "BACK_HOST=http://arachni-back-dev.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back-dev.apps.os-lab-3.neo/api" >> $GITHUB_ENV
 
       - name: Set UAT env
         if: startsWith(env.BRANCH, 'release')
@@ -89,7 +89,7 @@ jobs:
           echo "APP_HOST=arachni-uat.neo" >> $GITHUB_ENV
           echo "NGINX_HOST=nginx-lab-1.neo" >> $GITHUB_ENV
           echo "TARGET_FILEPATH=${{ env.NGINX_SITES_DIR }}/arachni-uat" >> $GITHUB_ENV
-          echo "BACK_HOST=http://arachni-back-uat.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back-uat.apps.os-lab-3.neo/api" >> $GITHUB_ENV
 
       - name: Set Prod env
         if: env.BRANCH == 'master'
@@ -99,7 +99,7 @@ jobs:
           echo "APP_HOST=arachni.neo" >> $GITHUB_ENV
           echo "NGINX_HOST=nginx-lab-1.neo" >> $GITHUB_ENV
           echo "TARGET_FILEPATH=${{ env.NGINX_SITES_DIR }}/arachni" >> $GITHUB_ENV
-          echo "BACK_HOST=http://arachni-back.apps.os-lab-3.neo/api/arachni-articles" >> $GITHUB_ENV
+          echo "BACK_HOST=http://arachni-back.apps.os-lab-3.neo/api" >> $GITHUB_ENV
 
       - name: Image name to lowercase
         if: env.CD_MODE == 'dev'
