@@ -22,7 +22,7 @@ const ArticleView = () => {
     const readOnly = {readOnly: true};
 
     const [title, setTitle] = useState<string>("");
-    let [categories, setCategories] = useState<string>("");
+    const [categories, setCategories] = useState<string>("");
     const [text, setText] = useState<string>("");
     const [creator, setCreator] = useState<string>("");
 
@@ -49,7 +49,7 @@ const ArticleView = () => {
     const onClickClassifier = () => {
         store
             .onClassifyArticle(text)
-            .then(res => categories.concat(typeof res === "string" ? res.concat('/') : ""));
+            .then(res => setCategories(categories.concat(typeof res === "string" ? res.concat('/') : "")));
             // .then(res => categories = (typeof res === "string" ? res.concat('/') : "").concat(categories));
         return;
     }
