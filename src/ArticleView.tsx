@@ -49,8 +49,7 @@ const ArticleView = () => {
     const onClickClassifier = () => {
         store
             .onClassifyArticle(text)
-            .then(res => (typeof res === "string" ? res.concat('/') : "").concat(categories))
-            .then((res) => res && close());
+            .then(res => (typeof res === "string" ? res.concat('/') : "").concat(categories));
         return;
     }
 
