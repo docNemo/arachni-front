@@ -51,7 +51,7 @@ const ArticleView = () => {
             .onClassifyArticle(text)
             .then(
                 res => setCategories(
-                    (typeof res === "string" ? res.concat('/') : "").concat(categories)
+                    (typeof res === "string" ? res : "").concat(categories.length == 0 ? '/'.concat(categories) : "")
                 )
             );
         return;
