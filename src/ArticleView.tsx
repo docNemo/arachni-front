@@ -49,10 +49,12 @@ const ArticleView = () => {
     const onClickClassifier = () => {
         store
             .onClassifyArticle(text)
-            .then(
-                res => setCategories(
-                    (typeof res === "string" ? res : "").concat(categories.length > 0 ? '/'.concat(categories) : "")
-                )
+            .then(res => typeof res === "string" ? res : "")
+            .then(res => {
+                    if (!categories.includes(res)) {
+                        res.concat(categories.length > 0 ? '/'.concat(categories) : "")
+                    }
+                }
             );
         return;
     }
