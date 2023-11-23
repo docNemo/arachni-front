@@ -16,6 +16,9 @@ interface IArticleListResponse {
   data: Array<IArticle>;
   count: number;
 }
+interface IClassifiedCategoryResponse {
+  category: string;
+}
 
 interface IErrorResponse {
   errorCode: string;
@@ -227,6 +230,29 @@ class Store {
         this.setInfoBox(`Обновлена статья: ${res.title}`, "success");
       })
       .catch(this.errorHandler);
+
+  onClassifyArticle= (
+      text: string
+  ): Promise<void | string> =>
+      fetch(
+          `/api/arachni-classifier/classifier/category`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: text
+            }),
+          }
+      )
+          .then((res: Response) =>
+              res.status === 200 ? res.json() : Promise.reject(res)
+          )
+          .then((res: IClassifiedCategoryResponse) =>
+            res.category
+          )
+          .catch(this.errorHandler);
 
   setInfoBox = (text?: string, state?: State): void => {
     const newState: IInfoBox = {

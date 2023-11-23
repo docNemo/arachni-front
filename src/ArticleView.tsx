@@ -46,6 +46,18 @@ const ArticleView = () => {
         setUpdDlg(true);
     }
 
+    const onClickClassifier = () => {
+        if (mode === "ADD") {
+            store
+                .onClassifyArticle(text)
+                .then(res => (typeof res === "string" ? res.concat('/') : "").concat(categories))
+                .then((res) => res && close());
+            return;
+        }
+
+        setUpdDlg(true);
+    }
+
     const close = () => store.setEditor();
 
     const onEditMod = () => {
@@ -179,16 +191,8 @@ const ArticleView = () => {
                         />}
                     </Stack>
                     <Box sx={{ display: "flex", flexGrow: 1 }}>
-                        <TextField
-                            fullWidth
-                            disabled
-                            variant="standard"
-                            size="small"
-                            label={"Результат классификации"}
-                            onChange={(e) => { }}
-                        />
-                        <Button>
-                            Классифицировать
+                        <Button onClick={onClickClassifier}>
+                            Определить категорию
                         </Button>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
