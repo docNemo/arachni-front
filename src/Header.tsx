@@ -7,19 +7,15 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import store from "./Store";
-import Search from "./Search";
-import Filter from "./Filter";
 
 const Header = () => {
   return (
     <AppBar component={"nav"} sx={{ position: "relative" }}>
       <Toolbar>
         <Typography variant={"h5"} sx={{ flexGrow: 1 }}>
-          Курсовая работа
+          Arachni
         </Typography>
         <Box display={"flex"}>
-          <Search />
-          <Filter />
           <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
             <AddIcon />
           </IconButton>
