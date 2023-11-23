@@ -11,7 +11,7 @@ class FilterStore {
     loadCreators = () => {
         fetch("/api/arachni-articles/creator/list")
             .then((res: Response) => res.status === 200 ? res.json() : Promise.reject(res))
-            .then((res: ICreatorsListResponse) => {this.creators = res.data})
+            .then((res: ICreatorsListResponse) => {this.creators = res.data.concat("").sort()})
             .catch((err: Response) => console.log(err));
         console.log(this.creators)
     }
@@ -19,7 +19,7 @@ class FilterStore {
     loadCategories = () => {
         fetch("/api/arachni-articles/category/list")
             .then((res: Response) => res.status === 200 ? res.json() : Promise.reject(res))
-            .then((res: ICreatorsListResponse) => {this.categories = res.data})
+            .then((res: ICreatorsListResponse) => {this.categories = res.data.sort()})
             .catch((err: Response) => console.log(err));
         console.log(this.creators)
     }
