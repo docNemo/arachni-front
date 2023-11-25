@@ -35,8 +35,9 @@ const ArticleView = () => {
     const [edit, setEdit] = useState<boolean>(false);
     const [change, setChange] = useState<boolean>(false);
 
-    const [doubleClassifiedCategoryDlg, setDoubleClassifiedCategoryDlg] = useState<boolean>(false)
-    const [doubleClassifiedCategory, setDoubleClassifiedCategory] = useState<string>("false")
+    const [failedClassifiedCategoryDlg, setFailedClassifiedCategoryDlg] = useState<boolean>(false)
+    const [classifiedCategoryDlg, setClassifiedCategoryDlg] = useState<boolean>(false)
+    const [classifiedCategory, setClassifiedCategory] = useState<string>("false")
 
     const onClick = () => {
         if (mode === "ADD") {
@@ -54,14 +55,22 @@ const ArticleView = () => {
             .onClassifyArticle(text)
             .then(res => typeof res === "string" ? res : "")
             .then(res => {
-                    if (!categories.includes(res)) {
-                        setCategories(res.concat(categories.length > 0 ? '/'.concat(categories) : ""))
+                    if (res == "") {
+                        setFailedClassifiedCategoryDlg(true)
                     } else {
-                        setDoubleClassifiedCategoryDlg(true)
-                        setDoubleClassifiedCategory(res)
+                        setClassifiedCategoryDlg(true)
+                        setClassifiedCategory(res)
                     }
                 }
             );
+        return;
+    }
+
+    const addCategory = () => {
+        if (!categories.includes(classifiedCategory)) {
+            setCategories(classifiedCategory.concat(categories.length > 0 ? '/'.concat(categories) : ""))
+        }
+        setClassifiedCategoryDlg(false)
         return;
     }
 
@@ -197,7 +206,8 @@ const ArticleView = () => {
                             }}
                         />}
                     </Stack>
-                    <Box sx={{display: "flex", flexDirection: "row"}} justifyContent="space-between" alignItems="center">
+                    <Box sx={{display: "flex", flexDirection: "row"}} justifyContent="space-between"
+                         alignItems="center">
                         <Button onClick={onClickClassifier}>
                             Определить категорию
                         </Button>
@@ -207,15 +217,35 @@ const ArticleView = () => {
                     </Box>
                 </Stack>
             </Box>
-            <Dialog open={doubleClassifiedCategoryDlg}>
+            <Dialog open={classifiedCategoryDlg}>
                 <DialogTitle>Классификация</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Такая категория ("{doubleClassifiedCategory}") уже добавлена
+                        Будет добавлена категория "{classifiedCategory}". Если она вас не устраивает, то ее можно
+                        изменить.
+                    </DialogContentText>
+                    <TextField fullWidth
+                               variant="standard"
+                               size="small"
+                               error={classifiedCategory.trim() === ""}
+                               value={classifiedCategory}
+                               onChange={(e) => setClassifiedCategory(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={addCategory}>Добавить</Button>
+                    <Button onClick={() => setClassifiedCategoryDlg(false)}>Отмена</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={failedClassifiedCategoryDlg}>
+                <DialogTitle>Классификация</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Не удалось определить категорию. Попробуйте позже.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDoubleClassifiedCategoryDlg(false)}>Понятно</Button>
+                    <Button onClick={() => setFailedClassifiedCategoryDlg(false)}>Понятно</Button>
                 </DialogActions>
             </Dialog>
             <Dialog open={updDlg}>
