@@ -13,7 +13,7 @@ const Filter = () => {
       <LongSelect
         label="Автор"
         list={filterStore.creators}
-        value={[store.filter.creator ?? "Любой"]}
+        value={[store.filter.creator ?? ""]}
         setValue={(newValue) => store.filter.creator = newValue[0]}
       />
       <MultipleSelectChip
