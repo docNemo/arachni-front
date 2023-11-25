@@ -224,6 +224,13 @@ const ArticleView = () => {
                         Будет добавлена категория "{classifiedCategory}". Если она вас не устраивает, то ее можно
                         изменить.
                     </DialogContentText>
+                    <TextField fullWidth
+                               variant="standard"
+                               size="small"
+                               error={classifiedCategory.trim() === ""}
+                               value={classifiedCategory}
+                               onChange={(e) => setClassifiedCategory(e.target.value)}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={addCategory}>Добавить</Button>
