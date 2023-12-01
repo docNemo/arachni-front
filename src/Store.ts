@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { State, IInfoBox } from "./InfoBox";
 import { IProgress } from "./Progress";
-import filter from "./Filter";
 
 export interface IArticle {
   idArticle: string;
@@ -10,6 +9,7 @@ export interface IArticle {
   creator: string;
   creationDate: string;
   text?: string;
+  crawled: boolean;
 }
 
 interface IArticleListResponse {
@@ -60,7 +60,7 @@ class Store {
   sortBy: string = "DATE";
   orderBy: "ASC" | "DESC" = "DESC";
   modeView: "LIST" | "ARTICLE" = "LIST";
-  modeArticle?: "ADD" | "EDIT";
+  modeArticle?: "ADD" | "EDIT" | "CLASS";
   filter: IFilter = { categories: [] }
 
   constructor() {
@@ -116,6 +116,11 @@ class Store {
     this.modeView = "ARTICLE";
     this.modeArticle = "ADD";
   };
+
+  setClassificationDlg = (): void => {
+    this.modeView = "ARTICLE";
+    this.modeArticle = "CLASS";
+  }
 
   setDelDlg = (article?: IArticle): void => {
     this.selectArticle = article;

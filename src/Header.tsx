@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import store from "./Store";
 
 const Header = () => {
@@ -16,6 +17,9 @@ const Header = () => {
           Arachni
         </Typography>
         <Box display={"flex"}>
+          <IconButton sx={{ color: "white" }} onClick={store.setClassificationDlg}>
+            <BookmarkIcon />
+          </IconButton>
           <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
             <AddIcon />
           </IconButton>
