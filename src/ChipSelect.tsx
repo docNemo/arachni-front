@@ -50,8 +50,8 @@ const LongSelect = ({label, list, value, setValue}: ISelectProps) => {
                 value={value[0]}
                 onChange={handleChange}
                 onInputChange={(event: React.SyntheticEvent, value: string) => {
-                    setValue([value ?? ""])
-                    filterStore.loadCreators()
+                    // setValue([value ?? ""])
+                    filterStore.loadCreators(value)
                 }}
             />
         </FormControl>
