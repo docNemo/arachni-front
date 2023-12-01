@@ -73,6 +73,14 @@ const ArticleView = () => {
         setClassifiedCategoryDlg(false);
     }
 
+    const addCategory = () => {
+        if (!categories.includes(classifiedCategory)) {
+            setCategories(classifiedCategory.concat(categories.length > 0 ? '/'.concat(categories) : ""))
+        }
+        setClassifiedCategoryDlg(false)
+        return;
+    }
+
     const close = () => store.setEditor();
 
     // const onEditMod = () => {
