@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import Diversity2Icon from '@mui/icons-material/Diversity2';
 import store from "./Store";
 
 const Header = () => {
@@ -18,7 +18,7 @@ const Header = () => {
         </Typography>
         <Box display={"flex"}>
           <IconButton sx={{ color: "white" }} onClick={store.setClassificationDlg}>
-            <BookmarkIcon />
+            <Diversity2Icon />
           </IconButton>
           <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
             <AddIcon />

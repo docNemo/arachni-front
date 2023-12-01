@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/Button";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import store from "./Store";
 
 const Search = () => {
@@ -37,6 +38,14 @@ const Search = () => {
         sx={{ flexGrow: 1, paddingRight: "8px", marginLeft: "4px" }}
         placeholder={"Поиск..."}
       />
+      {store.searchText && <IconButton
+        size="small"
+        sx={{ minWidth: 0, color: "#c0c0c0" }}
+        onClick={() => store.setSearchText("")}
+      >
+        <CloseIcon />
+      </IconButton>
+      }
     </Box>
   );
 };

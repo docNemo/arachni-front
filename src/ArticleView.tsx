@@ -222,9 +222,11 @@ const ArticleView = () => {
                         <Button onClick={onClickClassifier}>
                             Определить категорию
                         </Button>
-                        <Button onClick={onClick} disabled={disableButton}>
-                            {mode === "ADD" ? "Создать" : "Сохранить"}
-                        </Button>
+                        {mode !== "CLASS" &&
+                            <Button onClick={onClick} disabled={disableButton}>
+                                {mode === "ADD" ? "Создать" : "Сохранить"}
+                            </Button>
+                        }
                     </Box>
                 </Stack>
             </Box>
