@@ -78,16 +78,16 @@ class Store {
     url.searchParams.append("limit", this.countArticlePage.toString());
     url.searchParams.append("order", this.orderBy);
     url.searchParams.append("sortBy", this.sortBy);
-    if (this.filter.creator && this.filter.creator != 'Любой'){
+    if (this.filter.creator && this.filter.creator != 'Любой') {
       url.searchParams.append("creator", this.filter.creator);
     }
-    if (this.filter.categories != undefined && this.filter.categories.length > 0){
+    if (this.filter.categories != undefined && this.filter.categories.length > 0) {
       url.searchParams.append("categories", this.filter.categories.toString());
     }
-    if (this.filter.beginDate != undefined){
+    if (this.filter.beginDate != undefined) {
       url.searchParams.append("startDate", this.filter.beginDate);
     }
-    if (this.filter.endDate){
+    if (this.filter.endDate) {
       url.searchParams.append("finishDate", this.filter.endDate);
     }
     this.searchText.trim() &&
@@ -206,7 +206,9 @@ class Store {
   onUpdArticle = (
     title: string,
     categories: Array<string>,
-    text: string
+    text: string,
+    creator: string,
+    creationDate: string
   ): Promise<void> =>
     fetch(
       `${window.location.origin}${this.url}/${this.selectArticle?.idArticle}`,
@@ -215,11 +217,7 @@ class Store {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title: title,
-          categories: categories,
-          text: text,
-        }),
+        body: JSON.stringify({ title, categories, text, creator, creationDate }),
       }
     )
       .then((res: Response) =>
@@ -236,28 +234,28 @@ class Store {
       })
       .catch(this.errorHandler);
 
-  onClassifyArticle= (
-      text: string
+  onClassifyArticle = (
+    text: string
   ): Promise<void | string> =>
-      fetch(
-          `/api/arachni-classifier/classifier/category`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              text: text
-            }),
-          }
+    fetch(
+      `/api/arachni-classifier/classifier/category`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: text
+        }),
+      }
+    )
+      .then((res: Response) =>
+        res.status === 200 ? res.json() : Promise.reject(res)
       )
-          .then((res: Response) =>
-              res.status === 200 ? res.json() : Promise.reject(res)
-          )
-          .then((res: IClassifiedCategoryResponse) =>
-            res.category
-          )
-          .catch(this.errorHandler);
+      .then((res: IClassifiedCategoryResponse) =>
+        res.category
+      )
+      .catch(this.errorHandler);
 
   setInfoBox = (text?: string, state?: State): void => {
     const newState: IInfoBox = {

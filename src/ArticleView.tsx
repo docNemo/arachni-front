@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import moment from "moment";
+import moment, { Moment } from "moment";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
@@ -14,6 +14,9 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 // import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import store from "./Store";
 
 const ArticleView = () => {
@@ -23,6 +26,7 @@ const ArticleView = () => {
     const [categories, setCategories] = useState<string>("");
     const [text, setText] = useState<string>("");
     const [creator, setCreator] = useState<string>("");
+    const [creationDate, setCreationDate] = useState<string | undefined>();
     const [crawled, setCrawled] = useState<boolean>(false);
 
     const [disableButton, setDisableButton] = useState<boolean>(true);
@@ -89,7 +93,7 @@ const ArticleView = () => {
         const arrCategories = Array.from(
             new Set(categories.split("/").map((str) => str.trim()))
         );
-        store.onUpdArticle(title, arrCategories, text)?.then(() => {
+        store.onUpdArticle(title, arrCategories, text, creator, creationDate + "T00:00:00")?.then(() => {
             setCategories(arrCategories.join("/"));
             setUpdDlg(false);
             // setChange(false);
@@ -100,6 +104,8 @@ const ArticleView = () => {
 
     // }
 
+    const newDate = (newValue: Moment | null) => setCreationDate(newValue?.format("YYYY-MM-DD"));
+
     useEffect(() => {
         setDisableButton(
             !(
@@ -109,7 +115,8 @@ const ArticleView = () => {
                     .map((str) => str.trim())
                     .some((str) => str === "") &&
                 text.trim() &&
-                creator.trim()
+                creator.trim() &&
+                creationDate
             )
         );
     });
@@ -122,12 +129,14 @@ const ArticleView = () => {
             setText(store.selectArticle?.text?.trim() ?? "");
             setCreator(store.selectArticle?.creator ?? "");
             setCrawled(store.selectArticle?.crawled ?? false);
+            setCreationDate(moment(store.selectArticle?.creationDate).format("YYYY-MM-DD"));
         } else {
             setTitle("");
             setCategories("");
             setText("");
             setCreator("");
             setCrawled(false);
+            setCreationDate(undefined);
         }
     }, [store.modeArticle]);
 
@@ -207,14 +216,17 @@ const ArticleView = () => {
                                 value={creator}
                                 onChange={(e) => setCreator(e.target.value)}
                             />
-                            {mode === "EDIT" && <TextField
-                                fullWidth
-                                variant="standard"
-                                size="small"
-                                label="Дата создания"
-                                disabled={crawled}
-                                value={moment(store.selectArticle?.creationDate).format("LLLL")}
-                            />}
+                            {mode === "EDIT" && <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="ru">
+                                <DateField
+                                    fullWidth
+                                    variant="standard"
+                                    size="small"
+                                    label="Дата создания"
+                                    value={moment(creationDate)}
+                                    onChange={newDate}
+                                />
+                            </LocalizationProvider>
+                            }
                         </>}
                     </Stack>
                     <Box sx={{ display: "flex", flexDirection: "row" }} justifyContent="space-between"
