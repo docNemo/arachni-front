@@ -18,7 +18,7 @@ server {
         proxy_ssl_name __BACK_HOST__;
         proxy_ssl_verify on;
         proxy_ssl_certificate __CERTS_DIR__/client.pem;
-        proxy_ssl_certificate __CERTS_DIR__/client.key;
+        proxy_ssl_certificate_key __CERTS_DIR__/client.key;
         proxy_ssl_trusted_certificate __CERTS_DIR__/chain.pem;
         proxy_http_version 1.1;
         proxy_redirect off;
