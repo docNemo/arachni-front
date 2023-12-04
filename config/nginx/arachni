@@ -3,6 +3,8 @@ server {
     gzip_types   text/plain application/xml application/x-javascript text/css;
     listen       __LISTEN_PORT__;
     server_name  __HOST_NAME__;
+    ssl_certificate __CERT_PATH__;
+    ssl_certificate_key __KEY_PATH__;
     access_log /var/log/nginx/__HOST_NAME__-access.log;
     error_log /var/log/nginx/__HOST_NAME__-error.log;
     root         /app;
@@ -10,7 +12,13 @@ server {
     index index.html index.htm;
 
     location /api {
-        proxy_pass              __BACK_HOST__;
+        proxy_pass              https://__BACK_HOST__/api;
+        proxy_set_header Host   __BACK_HOST__;
+        proxy_ssl_server_name on;
+        proxy_ssl_name __BACK_HOST__;
+        proxy_ssl_verify on;
+        proxy_ssl_trusted_certificate __CHAIN_PATH__;
+        proxy_http_version 1.1;
         proxy_redirect          off;
     }
 
