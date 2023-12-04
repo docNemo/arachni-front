@@ -85,23 +85,27 @@ jobs:
         if: startsWith(env.BRANCH, 'release')
         run: |
           echo "CD_MODE=uat" >> $GITHUB_ENV
-          echo "LISTEN_PORT=80" >> $GITHUB_ENV
+          echo "LISTEN_PORT=443" >> $GITHUB_ENV
           echo "APP_HOST=arachni-uat.neo" >> $GITHUB_ENV
           echo "NGINX_HOST=nginx-lab-1.neo" >> $GITHUB_ENV
           echo "TARGET_FILEPATH=${{ env.NGINX_SITES_DIR }}/arachni-uat" >> $GITHUB_ENV
           echo "BACK_HOST=arachni-back-uat.apps.os-lab-3.neo" >> $GITHUB_ENV
           echo "CHAIN_PATH=/etc/sec/arachni-uat/chain.pem" >> $GITHUB_ENV
+          echo "CERT_PATH=/etc/sec/arachni-uat/tls.pem" >> $GITHUB_ENV
+          echo "KEY_PATH=/etc/sec/arachni-uat/tls.key" >> $GITHUB_ENV
 
       - name: Set Prod env
         if: env.BRANCH == 'master'
         run: |
           echo "CD_MODE=prod" >> $GITHUB_ENV
-          echo "LISTEN_PORT=80" >> $GITHUB_ENV
+          echo "LISTEN_PORT=443" >> $GITHUB_ENV
           echo "APP_HOST=arachni.neo" >> $GITHUB_ENV
           echo "NGINX_HOST=nginx-lab-1.neo" >> $GITHUB_ENV
           echo "TARGET_FILEPATH=${{ env.NGINX_SITES_DIR }}/arachni" >> $GITHUB_ENV
           echo "BACK_HOST=arachni-back.apps.os-lab-3.neo" >> $GITHUB_ENV
           echo "CHAIN_PATH=/etc/sec/arachni/chain.pem" >> $GITHUB_ENV
+          echo "CERT_PATH=/etc/sec/arachni/tls.pem" >> $GITHUB_ENV
+          echo "KEY_PATH=/etc/sec/arachni/tls.key" >> $GITHUB_ENV
 
       - name: Image name to lowercase
         if: env.CD_MODE == 'dev'
@@ -196,6 +200,8 @@ jobs:
           sed -i 's#__HOST_NAME__#${{ env.APP_HOST }}#g' ${{ env.NGINX_TEMPLATE }}
           sed -i 's#__BACK_HOST__#${{ env.BACK_HOST }}#g' ${{ env.NGINX_TEMPLATE }}
           sed -i 's#__CHAIN_PATH__#${{ env.CHAIN_PATH }}#g' ${{ env.NGINX_TEMPLATE }}
+          sed -i 's#__CERT_PATH__#${{ env.CERT_PATH }}#g' ${{ env.NGINX_TEMPLATE }}
+          sed -i 's#__KEY_PATH__#${{ env.KEY_PATH }}#g' ${{ env.NGINX_TEMPLATE }}
 
       - name: Deploy config to nginx
         if: env.CD_MODE == 'uat' || env.CD_MODE == 'prod'

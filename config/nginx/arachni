@@ -3,6 +3,8 @@ server {
     gzip_types   text/plain application/xml application/x-javascript text/css;
     listen       __LISTEN_PORT__;
     server_name  __HOST_NAME__;
+    ssl_certificate __CERT_PATH__;
+    ssl_certificate_key __KEY_PATH__;
     access_log /var/log/nginx/__HOST_NAME__-access.log;
     error_log /var/log/nginx/__HOST_NAME__-error.log;
     root         /app;
