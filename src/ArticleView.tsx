@@ -230,7 +230,7 @@ const ArticleView = () => {
                     </Stack>
                     <Box sx={{ display: "flex", flexDirection: "row" }} justifyContent="space-between"
                         alignItems="center">
-                        <Button onClick={onClickClassifier}>
+                        <Button onClick={onClickClassifier} disabled={!text.trim()}>
                             Определить категорию
                         </Button>
                         {mode !== "CLASS" &&
