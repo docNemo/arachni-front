@@ -115,8 +115,7 @@ const ArticleView = () => {
                     .map((str) => str.trim())
                     .some((str) => str === "") &&
                 text.trim() &&
-                creator.trim() &&
-                creationDate
+                creator.trim()
             )
         );
     });
