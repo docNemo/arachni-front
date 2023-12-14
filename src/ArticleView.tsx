@@ -184,8 +184,7 @@ const ArticleView = () => {
                                 fullWidth
                                 variant="standard"
                                 size="small"
-                                label={"Категория"}
-                                helperText={"Категория должна быть в формате: кат1/кат2..."}
+                                label={"Категория (категория должна быть в формате: кат1/кат2...)"}
                                 error={categories
                                     .split("/")
                                     .map((str) => str.trim())
