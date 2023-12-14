@@ -194,14 +194,13 @@ const ArticleView = () => {
                                 onChange={(e) => setCategories(e.target.value)}
                             />
                         </>}
-                        <Typography variant="overline">Система поддерживает классификацию текстов только на русском языке</Typography>
                         <TextField
                             fullWidth
                             multiline
                             variant="standard"
                             size="small"
                             rows={20}
-                            label={"Текст статьи"}
+                            label={"Текст статьи (cистема поддерживает классификацию текстов только на русском языке)"}
                             error={text.trim() === ""}
                             value={text}
                             onChange={(e) => setText(e.target.value)}
