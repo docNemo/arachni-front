@@ -14,6 +14,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 // import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DateField } from '@mui/x-date-pickers/DateField';
@@ -165,7 +166,7 @@ const ArticleView = () => {
                             </IconButton>
                         </Box> */}
                         <IconButton onClick={close}>
-                            <CloseIcon />
+                            {mode !== "CLASS" ? <CloseIcon /> : <ArrowBackIcon />}
                         </IconButton>
                     </Box>
                     <Stack>
@@ -200,6 +201,7 @@ const ArticleView = () => {
                             size="small"
                             rows={20}
                             label={"Текст статьи"}
+                            helperText={"Система поддерживает классификацию текстов только на русском языке"}
                             error={text.trim() === ""}
                             value={text}
                             onChange={(e) => setText(e.target.value)}
