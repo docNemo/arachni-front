@@ -17,12 +17,15 @@ const Header = () => {
           Arachni
         </Typography>
         <Box display={"flex"}>
-          <IconButton sx={{ color: "white" }} onClick={store.setClassificationDlg}>
-            <Diversity2Icon />
-          </IconButton>
-          <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
-            <AddIcon />
-          </IconButton>
+          {store.modeArticle === undefined &&
+            <>
+              <IconButton sx={{ color: "white" }} onClick={store.setClassificationDlg}>
+                <Diversity2Icon />
+              </IconButton>
+              <IconButton sx={{ color: "white" }} onClick={store.setAddDlg}>
+                <AddIcon />
+              </IconButton>
+            </>}
         </Box>
       </Toolbar>
     </AppBar>
