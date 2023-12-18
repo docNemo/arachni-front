@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { State, IInfoBox } from "./InfoBox";
+import { IProgress } from "./Progress";
 
 export interface IArticle {
   idArticle: string;
@@ -8,11 +9,15 @@ export interface IArticle {
   creator: string;
   creationDate: string;
   text?: string;
+  crawled: boolean;
 }
 
 interface IArticleListResponse {
-  articles: Array<IArticle>;
+  data: Array<IArticle>;
   count: number;
+}
+interface IClassifiedCategoryResponse {
+  category: string;
 }
 
 interface IErrorResponse {
@@ -26,25 +31,37 @@ export enum SortBy {
   CREATOR = "Автор",
 }
 
+interface IFilter {
+  beginDate?: string;
+  endDate?: string;
+  creator?: string;
+  categories: Array<string>;
+}
+
 class Store {
   private readonly countArticlePage: number = 25;
-  private readonly url: string = "/api/article";
+  private readonly url: string = "/api/arachni-articles/article";
   articles: Array<IArticle> = [];
   countArticles: number = 0;
   countPage: number = 1;
   page: number = 1;
   selectArticle?: IArticle;
   searchText: string = "";
-  isOpenAddDlg: boolean = false;
   isOpenDelDlg: boolean = false;
-  isOpenEditor: boolean = false;
   infoBox: IInfoBox = {
     open: false,
     text: "",
     close: () => this.setInfoBox(),
   };
+  progress: IProgress = {
+    open: false,
+    text: undefined,
+  }
   sortBy: string = "DATE";
   orderBy: "ASC" | "DESC" = "DESC";
+  modeView: "LIST" | "ARTICLE" = "LIST";
+  modeArticle?: "ADD" | "EDIT" | "CLASS";
+  filter: IFilter = { categories: [] }
 
   constructor() {
     makeAutoObservable(this);
@@ -52,6 +69,7 @@ class Store {
   }
 
   loadArticles = (): void => {
+    this.setProgress(true, "Загрузка");
     const url: URL = new URL(`${this.url}/list`, window.location.origin);
     url.searchParams.append(
       "skip",
@@ -60,6 +78,18 @@ class Store {
     url.searchParams.append("limit", this.countArticlePage.toString());
     url.searchParams.append("order", this.orderBy);
     url.searchParams.append("sortBy", this.sortBy);
+    if (this.filter.creator && this.filter.creator != 'Любой') {
+      url.searchParams.append("creator", this.filter.creator);
+    }
+    if (this.filter.categories != undefined && this.filter.categories.length > 0) {
+      url.searchParams.append("categories", this.filter.categories.toString());
+    }
+    if (this.filter.beginDate != undefined) {
+      url.searchParams.append("startDate", this.filter.beginDate);
+    }
+    if (this.filter.endDate) {
+      url.searchParams.append("finishDate", this.filter.endDate);
+    }
     this.searchText.trim() &&
       url.searchParams.append("searchString", this.searchText.trim());
     fetch(url, { method: "GET" })
@@ -67,8 +97,10 @@ class Store {
         res.status === 200 ? res.json() : Promise.reject(res)
       )
       .then((res: IArticleListResponse) => {
-        this.articles = res.articles;
+        this.articles = res.data;
+        this.countArticles = res.count;
         this.countPage = Math.ceil(res.count / this.countArticlePage);
+        this.setProgress();
       })
       .catch(this.errorHandler);
   };
@@ -80,7 +112,15 @@ class Store {
     this.loadArticles();
   };
 
-  setAddDlg = (): boolean => (this.isOpenAddDlg = !this.isOpenAddDlg);
+  setAddDlg = (): void => {
+    this.modeView = "ARTICLE";
+    this.modeArticle = "ADD";
+  };
+
+  setClassificationDlg = (): void => {
+    this.modeView = "ARTICLE";
+    this.modeArticle = "CLASS";
+  }
 
   setDelDlg = (article?: IArticle): void => {
     this.selectArticle = article;
@@ -89,7 +129,8 @@ class Store {
 
   setEditor = (article?: IArticle): void => {
     if (!article) {
-      this.isOpenEditor = !this.isOpenEditor;
+      this.modeView = "LIST";
+      this.modeArticle = undefined;
       return;
     }
     fetch(`${window.location.origin}${this.url}/${article.idArticle}`, {
@@ -100,7 +141,8 @@ class Store {
       )
       .then((res: IArticle) => {
         this.selectArticle = res;
-        this.isOpenEditor = !this.isOpenEditor;
+        this.modeView = "ARTICLE";
+        this.modeArticle = "EDIT";
       })
       .catch(this.errorHandler);
   };
@@ -164,7 +206,9 @@ class Store {
   onUpdArticle = (
     title: string,
     categories: Array<string>,
-    text: string
+    text: string,
+    creator: string,
+    creationDate: string
   ): Promise<void> =>
     fetch(
       `${window.location.origin}${this.url}/${this.selectArticle?.idArticle}`,
@@ -173,11 +217,7 @@ class Store {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          title: title,
-          categories: categories,
-          text: text,
-        }),
+        body: JSON.stringify({ title, categories, text, creator, creationDate }),
       }
     )
       .then((res: Response) =>
@@ -194,8 +234,31 @@ class Store {
       })
       .catch(this.errorHandler);
 
+  onClassifyArticle = (
+    text: string
+  ): Promise<void | string> =>
+    fetch(
+      `/api/arachni-classifier/classifier/category`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: text
+        }),
+      }
+    )
+      .then((res: Response) =>
+        res.status === 200 ? res.json() : Promise.reject(res)
+      )
+      .then((res: IClassifiedCategoryResponse) =>
+        res.category
+      )
+      .catch(this.errorHandler);
+
   setInfoBox = (text?: string, state?: State): void => {
-    let newState: IInfoBox = {
+    const newState: IInfoBox = {
       open: text !== undefined,
       text: text ?? "",
       close: this.infoBox.close,
@@ -203,6 +266,8 @@ class Store {
     state && (newState.state = state);
     this.infoBox = newState;
   };
+
+  setProgress = (open: boolean = false, text?: string): IProgress => (this.progress = { open, text })
 
   errorHandler = (err: Response) =>
     err

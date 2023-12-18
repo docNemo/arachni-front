@@ -2,13 +2,12 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
-import store from "./Store";
 import Article from "./Article";
-import ArticleEditor from "./ArticleEditor";
-import ArticleAddDlg from "./ArticleAddDlg";
 import ArticleDelDlg from "./ArticleDelDlg";
-import InfoBox from "./InfoBox";
+import store from "./Store";
+import { Divider } from "@mui/material";
 
 const ListPaper = () => {
   const handleChangePage = (_: React.ChangeEvent<unknown>, page: number) =>
@@ -16,7 +15,11 @@ const ListPaper = () => {
 
   return (
     <>
-      <Stack sx={{ flexGrow: 1, overflowY: "hidden" }}>
+      <Stack sx={{ flexGrow: 1, overflowY: "hidden", width: "640px" }}>
+        <Typography variant="h6" sx={{ margin: "8px 24px" }}>
+          {`Найдено ${store.countArticles} статей`}
+        </Typography>
+        <Divider />
         <Stack sx={{ alignItems: "center", overflowY: "auto", flexGrow: 1 }}>
           {store.articles.map((article) => (
             <Article key={article.idArticle} article={article} />
@@ -46,10 +49,7 @@ const ListPaper = () => {
           </Box>
         </Stack>
       </Stack>
-      {store.isOpenAddDlg && <ArticleAddDlg />}
       <ArticleDelDlg />
-      {store.isOpenEditor && <ArticleEditor />}
-      <InfoBox {...store.infoBox} />
     </>
   );
 };
